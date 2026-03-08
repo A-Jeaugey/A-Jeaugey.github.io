@@ -357,13 +357,14 @@ const LabSection = () => {
           const targetDir = args ? resolvePath(currentDir, args) : currentDir;
           const content = fileSystem[targetDir];
           if (content && Array.isArray(content)) {
-            const formatted = content
-              .map((f) => {
-                const isDir = fileSystem[`${targetDir}/${f}`];
-                return isDir ? `\x1bdir:${f}/` : f;
-              })
-              .join("  ");
-            setTerminalLines((prev) => [...prev, formatted]);
+            const items = content.map((f) => {
+              const isDir = fileSystem[`${targetDir}/${f}`];
+              return { name: f + (isDir ? "/" : ""), isDir: !!isDir };
+            });
+            // Each item on its own line for proper coloring
+            items.forEach((item) => {
+              setTerminalLines((prev) => [...prev, item.isDir ? `DIR:${item.name}` : `  ${item.name}`]);
+            });
           } else {
             setTerminalLines((prev) => [...prev, `ls: cannot access '${args}': No such file or directory`]);
           }
@@ -634,8 +635,8 @@ const LabSection = () => {
                         <span style={{ color: "hsl(210 60% 60%)" }}>  →</span>
                         {line.slice(3)}
                       </>
-                    ) : line.startsWith("\x1bdir:") ? (
-                      <span style={{ color: "hsl(210 60% 65%)" }}>{line.replace("\x1bdir:", "")}</span>
+                    ) : line.startsWith("DIR:") ? (
+                      <span style={{ color: "hsl(210 60% 65%)" }}>{line.slice(4)}</span>
                     ) : line.includes("command not found") || line.includes("No such file") || line.includes("cannot access") ? (
                       <span style={{ color: "hsl(0 60% 60%)" }}>{line}</span>
                     ) : (
