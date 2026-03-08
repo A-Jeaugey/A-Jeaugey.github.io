@@ -140,7 +140,7 @@ const LabSection = () => {
               </div>
               <div
                 ref={terminalRef}
-                className="p-4 h-[320px] overflow-y-auto font-mono text-xs leading-relaxed"
+                className="p-4 h-[320px] overflow-y-auto font-mono text-xs leading-relaxed scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
               >
                 {terminalLines.map((line, i) => (
                   <div
