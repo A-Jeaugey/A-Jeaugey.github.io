@@ -357,13 +357,14 @@ const LabSection = () => {
           const targetDir = args ? resolvePath(currentDir, args) : currentDir;
           const content = fileSystem[targetDir];
           if (content && Array.isArray(content)) {
-            const formatted = content
-              .map((f) => {
-                const isDir = fileSystem[`${targetDir}/${f}`];
-                return isDir ? `\x1bdir:${f}/` : f;
-              })
-              .join("  ");
-            setTerminalLines((prev) => [...prev, formatted]);
+            const items = content.map((f) => {
+              const isDir = fileSystem[`${targetDir}/${f}`];
+              return { name: f + (isDir ? "/" : ""), isDir: !!isDir };
+            });
+            // Each item on its own line for proper coloring
+            items.forEach((item) => {
+              setTerminalLines((prev) => [...prev, item.isDir ? `DIR:${item.name}` : `  ${item.name}`]);
+            });
           } else {
             setTerminalLines((prev) => [...prev, `ls: cannot access '${args}': No such file or directory`]);
           }
