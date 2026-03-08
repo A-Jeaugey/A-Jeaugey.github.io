@@ -202,8 +202,9 @@ const LabSection = () => {
     let i = 0;
     const interval = setInterval(() => {
       if (i < bootLines.length) {
-        setTerminalLines((prev) => [...prev, bootLines[i]]);
+        const line = bootLines[i];
         i++;
+        setTerminalLines((prev) => [...prev, line]);
         scrollTerminal();
       } else {
         clearInterval(interval);
@@ -540,7 +541,7 @@ const LabSection = () => {
                 ref={terminalRef}
                 className="p-4 h-[320px] overflow-y-auto font-mono text-[11px] leading-relaxed scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] flex-shrink-0"
               >
-                {terminalLines.map((line, i) => (
+                {terminalLines.filter((line) => line != null).map((line, i) => (
                   <div
                     key={i}
                     className={`whitespace-pre-wrap ${
