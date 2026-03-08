@@ -15,19 +15,14 @@ interface Stick {
   velocity: number;
 }
 
-// Oxidized chrome — angle-dependent color shift like light on brushed metal
+// Chrome bleuté — reflet métallique froid
 const getChromaColor = (angle: number, proximity: number): string => {
-  const normAngle = angle / (Math.PI * 0.35); // -1 to 1
-  // Chrome shifts: cold blue-steel at rest → warm copper/bronze when angled
-  // Mix between cool and warm based on angle direction
-  const t = (normAngle + 1) / 2; // 0 to 1
-  
-  // Interpolate through chrome spectrum: teal-blue → silver → rose-copper
-  const r = Math.round(120 + t * 100 + proximity * 40);
-  const g = Math.round(130 + (1 - Math.abs(normAngle)) * 50 + proximity * 20);
-  const b = Math.round(160 - t * 80 + proximity * 10);
-  
-  const alpha = 0.1 + proximity * 0.65;
+  const absAngle = Math.abs(angle);
+  // Silver-blue chrome: blanc bleuté au centre, bleu acier quand incliné
+  const r = Math.round(140 + proximity * 60 - absAngle * 30);
+  const g = Math.round(150 + proximity * 65 - absAngle * 15);
+  const b = Math.round(180 + proximity * 70);
+  const alpha = 0.1 + proximity * 0.6;
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
