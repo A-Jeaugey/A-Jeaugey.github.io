@@ -1,33 +1,26 @@
 import { useEffect, useRef } from "react";
 
-interface Blob {
+const STICK_COUNT = 180;
+const STICK_HEIGHT = 40;
+const STICK_WIDTH = 2;
+const MOUSE_RADIUS = 200;
+const GRAVITY_STRENGTH = 0.6;
+
+interface Stick {
   x: number;
   y: number;
-  vx: number;
-  vy: number;
-  radius: number;
-  baseX: number;
-  baseY: number;
-  color: string;
-  phase: number;
-  speed: number;
+  angle: number;
+  targetAngle: number;
+  velocity: number;
 }
-
-const COLORS = [
-  "rgba(100, 80, 180, 0.12)",
-  "rgba(60, 100, 200, 0.10)",
-  "rgba(130, 70, 160, 0.08)",
-  "rgba(50, 80, 170, 0.09)",
-  "rgba(80, 60, 200, 0.07)",
-];
 
 const LiquidBackground = ({ className = "" }: { className?: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: 0, y: 0 });
-  const smoothMouseRef = useRef({ x: 0, y: 0 });
-  const blobsRef = useRef<Blob[]>([]);
-  const animRef = useRef<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const mouseRef = useRef({ x: -1000, y: -1000 });
+  const smoothMouseRef = useRef({ x: -1000, y: -1000 });
+  const sticksRef = useRef<Stick[]>([]);
+  const animRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -37,36 +30,41 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    let w = 0;
+    let h = 0;
+
+    const initSticks = () => {
+      const cols = Math.ceil(Math.sqrt(STICK_COUNT * (w / h)));
+      const rows = Math.ceil(STICK_COUNT / cols);
+      const spacingX = w / (cols + 1);
+      const spacingY = h / (rows + 1);
+
+      sticksRef.current = [];
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          if (sticksRef.current.length >= STICK_COUNT) break;
+          sticksRef.current.push({
+            x: spacingX * (col + 1) + (Math.random() - 0.5) * spacingX * 0.4,
+            y: spacingY * (row + 1) + (Math.random() - 0.5) * spacingY * 0.4,
+            angle: 0,
+            targetAngle: 0,
+            velocity: 0,
+          });
+        }
+      }
+    };
+
     const resize = () => {
       const rect = container.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio, 2);
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
+      w = rect.width;
+      h = rect.height;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
       ctx.scale(dpr, dpr);
-
-      // Initialize blobs if empty
-      if (blobsRef.current.length === 0) {
-        blobsRef.current = COLORS.map((color, i) => ({
-          x: rect.width * (0.2 + Math.random() * 0.6),
-          y: rect.height * (0.2 + Math.random() * 0.6),
-          vx: 0,
-          vy: 0,
-          radius: 120 + Math.random() * 180,
-          baseX: rect.width * (0.15 + (i / COLORS.length) * 0.7),
-          baseY: rect.height * (0.2 + Math.random() * 0.6),
-          color,
-          phase: Math.random() * Math.PI * 2,
-          speed: 0.15 + Math.random() * 0.2,
-        }));
-      }
-
-      // Update base positions on resize
-      blobsRef.current.forEach((blob, i) => {
-        blob.baseX = rect.width * (0.15 + (i / COLORS.length) * 0.7);
-        blob.baseY = rect.height * (0.2 + Math.random() * 0.6);
-      });
+      initSticks();
     };
 
     resize();
@@ -77,62 +75,66 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
       mouseRef.current.y = e.clientY - rect.top;
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    const handleMouseLeave = () => {
+      mouseRef.current.x = -1000;
+      mouseRef.current.y = -1000;
+    };
+
+    container.addEventListener("mousemove", handleMouseMove);
+    container.addEventListener("mouseleave", handleMouseLeave);
     window.addEventListener("resize", resize);
 
-    let time = 0;
-
     const animate = () => {
-      const rect = container.getBoundingClientRect();
-      const w = rect.width;
-      const h = rect.height;
-
       ctx.clearRect(0, 0, w, h);
 
-      // Smooth mouse with heavy easing for delayed, viscous feel
-      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * 0.02;
-      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * 0.02;
+      // Smooth mouse with delay for viscous feel
+      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * 0.08;
+      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * 0.08;
 
-      time += 0.003;
+      const mx = smoothMouseRef.current.x;
+      const my = smoothMouseRef.current.y;
 
-      blobsRef.current.forEach((blob) => {
-        // Organic drift around base position
-        const driftX = Math.sin(time * blob.speed + blob.phase) * 60;
-        const driftY = Math.cos(time * blob.speed * 0.7 + blob.phase + 1) * 40;
-
-        const targetX = blob.baseX + driftX;
-        const targetY = blob.baseY + driftY;
-
-        // Mouse influence — gentle push/pull
-        const dx = smoothMouseRef.current.x - blob.x;
-        const dy = smoothMouseRef.current.y - blob.y;
+      sticksRef.current.forEach((stick) => {
+        const dx = mx - stick.x;
+        const dy = my - stick.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const mouseInfluence = Math.max(0, 1 - dist / 400) * 30;
 
-        const finalTargetX = targetX + (dx / (dist || 1)) * mouseInfluence;
-        const finalTargetY = targetY + (dy / (dist || 1)) * mouseInfluence;
+        if (dist < MOUSE_RADIUS && dist > 1) {
+          // Angle pointing toward mouse
+          const angleToMouse = Math.atan2(dx, -dy); // rotated so 0 = vertical
+          const influence = Math.pow(1 - dist / MOUSE_RADIUS, 1.5) * GRAVITY_STRENGTH;
+          stick.targetAngle = angleToMouse * influence;
+        } else {
+          stick.targetAngle = 0;
+        }
 
-        // Spring physics with damping
-        const ax = (finalTargetX - blob.x) * 0.008;
-        const ay = (finalTargetY - blob.y) * 0.008;
+        // Spring physics
+        const spring = 0.08;
+        const damping = 0.82;
+        const force = (stick.targetAngle - stick.angle) * spring;
+        stick.velocity = stick.velocity * damping + force;
+        stick.angle += stick.velocity;
 
-        blob.vx = blob.vx * 0.96 + ax;
-        blob.vy = blob.vy * 0.96 + ay;
-        blob.x += blob.vx;
-        blob.y += blob.vy;
+        // Draw stick
+        const halfH = STICK_HEIGHT / 2;
+        const topX = stick.x + Math.sin(stick.angle) * halfH;
+        const topY = stick.y - Math.cos(stick.angle) * halfH;
+        const botX = stick.x - Math.sin(stick.angle) * halfH;
+        const botY = stick.y + Math.cos(stick.angle) * halfH;
 
-        // Draw blob
-        const gradient = ctx.createRadialGradient(
-          blob.x, blob.y, 0,
-          blob.x, blob.y, blob.radius
-        );
-        gradient.addColorStop(0, blob.color);
-        gradient.addColorStop(1, "transparent");
+        // Opacity based on distance to mouse for subtle glow
+        const glowDist = Math.sqrt((mx - stick.x) ** 2 + (my - stick.y) ** 2);
+        const glowFactor = Math.max(0, 1 - glowDist / MOUSE_RADIUS);
+        const baseAlpha = 0.12;
+        const alpha = baseAlpha + glowFactor * 0.25;
 
         ctx.beginPath();
-        ctx.arc(blob.x, blob.y, blob.radius, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
-        ctx.fill();
+        ctx.moveTo(topX, topY);
+        ctx.lineTo(botX, botY);
+        ctx.strokeStyle = `rgba(140, 120, 210, ${alpha})`;
+        ctx.lineWidth = STICK_WIDTH;
+        ctx.lineCap = "round";
+        ctx.stroke();
       });
 
       animRef.current = requestAnimationFrame(animate);
@@ -142,18 +144,15 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
 
     return () => {
       cancelAnimationFrame(animRef.current);
-      window.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mouseleave", handleMouseLeave);
       window.removeEventListener("resize", resize);
     };
   }, []);
 
   return (
     <div ref={containerRef} className={`absolute inset-0 overflow-hidden ${className}`}>
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
-        style={{ filter: "blur(80px)" }}
-      />
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
     </div>
   );
 };
