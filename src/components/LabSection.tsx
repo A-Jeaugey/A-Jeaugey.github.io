@@ -1,5 +1,5 @@
 import LabCard from "./LabCard";
-import { useScrollFadeIn } from "@/hooks/useScrollFadeIn";
+import { useStaggerReveal, useParallax } from "@/hooks/useScrollFadeIn";
 
 const experiments = [
   {
@@ -35,18 +35,27 @@ const experiments = [
 ];
 
 const LabSection = () => {
-  const ref = useScrollFadeIn();
+  const { containerRef, visibleItems } = useStaggerReveal(experiments.length, 100);
+  const { ref: parallaxRef, offset } = useParallax(0.06);
 
   return (
     <section id="lab" className="py-24 sm:py-32">
-      <div ref={ref} className="fade-section max-w-5xl mx-auto px-6">
-        <h2 className="text-sm font-mono text-muted-foreground mb-10 tracking-wider uppercase">
-          Lab
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {experiments.map((exp) => (
-            <LabCard key={exp.title} {...exp} />
-          ))}
+      <div ref={parallaxRef} className="max-w-5xl mx-auto px-6" style={{ transform: `translateY(${offset}px)` }}>
+        <div ref={containerRef}>
+          <h2
+            className="text-sm font-mono text-muted-foreground mb-10 tracking-wider uppercase transition-all duration-700"
+            style={{
+              opacity: visibleItems[0] ? 1 : 0,
+              transform: visibleItems[0] ? "translateX(0)" : "translateX(-20px)",
+            }}
+          >
+            Lab
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {experiments.map((exp, i) => (
+              <LabCard key={exp.title} {...exp} visible={visibleItems[i]} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
