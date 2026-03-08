@@ -11,6 +11,7 @@ interface ExperimentDetail {
   report: {
     summary: string;
     highlights: string[];
+    exploring?: string[];
     metrics?: { label: string; value: string }[];
     tools: string[];
     links?: { label: string; url: string }[];
@@ -20,34 +21,44 @@ interface ExperimentDetail {
 const experiments: ExperimentDetail[] = [
   {
     title: "Running Local LLMs on Consumer Hardware",
-    description: "Testing local language models on my own hardware to understand VRAM limits, quantization tradeoffs, and real-world inference performance.",
+    description: "Running local language models day-to-day — testing usability, responsiveness and real-world limits on my own machine.",
     category: "AI",
     status: "in-progress",
     slug: "local-llms",
     report: {
-      summary: "I've been experimenting with local LLMs to better understand how model size, quantization and GPU memory affect performance. My goal is less about chasing benchmarks and more about understanding the practical limits of running modern models on consumer hardware.",
+      summary: "Less about benchmarks, more about what it actually feels like to run modern language models locally. I've been using and switching between models to understand their real-world usability: speed, responsiveness, and where they break down.",
       highlights: [
-        "Ran several local models, including GLM 4.7 Flash in Q4_K_M",
-        "Compared how quantization changes memory usage and responsiveness",
-        "Confirmed that VRAM is often a bigger limitation than raw compute",
-        "Noticed that performance drops sharply when models spill outside GPU memory",
+        "Running GLM 4.7 Flash Q4_K_M as a daily local model",
+        "Tested several models to compare output quality and responsiveness",
+        "Noticed that model usability degrades well before VRAM is fully saturated",
+        "Found that prompt length matters as much as model size for perceived speed",
+      ],
+      exploring: [
+        "How different models handle long context windows locally",
+        "The gap between local and cloud model usability in practice",
+        "Which model sizes are actually useful vs just technically runnable",
       ],
       tools: ["Local LLM runtimes", "GGUF / quantized models", "RTX 5080", "Ryzen 9 9950X3D"],
     },
   },
   {
     title: "GPU Memory & Quantization Notes",
-    description: "Exploring how quantization formats affect memory usage, model size and usability when running local AI models.",
+    description: "An engineering notebook on quantization: how format choices affect memory, quality and practical usability on consumer GPUs.",
     category: "AI",
     status: "in-progress",
     slug: "quantization",
     report: {
-      summary: "This is more of an ongoing technical note than a finished benchmark. I've been trying to understand the practical relationship between quantization, VRAM usage and model quality while running LLMs locally.",
+      summary: "A running technical log rather than a finished study. I'm documenting what I observe about quantization formats, VRAM behavior and model quality as I actually use these models — not to publish results, but to build real intuition.",
       highlights: [
-        "Explored the practical difference between heavier and lighter quantized models",
-        "Learned how quickly context length and model size can push memory limits",
-        "Better understood why local inference is often memory-bound",
-        "Used these tests mainly to build intuition, not to publish rigorous benchmarks",
+        "Compared Q4_K_M vs heavier quantizations in practice",
+        "Observed when models start spilling outside VRAM under load",
+        "Explored how context size impacts memory usage non-linearly",
+        "Documented practical limits of consumer GPUs for different model sizes",
+      ],
+      exploring: [
+        "How quantization affects usability, not just perplexity scores",
+        "The point where VRAM becomes the real bottleneck",
+        "Whether lighter quantizations are viable for real tasks",
       ],
       tools: ["Quantized GGUF models", "Local inference tools", "GPU monitoring tools"],
     },
@@ -119,6 +130,12 @@ const categoryColors: Record<string, string> = {
   Hardware: "150 50% 45%",
 };
 
+const categoryIcons: Record<string, string> = {
+  AI: "🧠",
+  Security: "🔐",
+  Hardware: "⚙️",
+};
+
 const fileSystem: Record<string, string[] | string> = {
   "~": ["lab", "projects", ".bashrc", ".gitconfig"],
   "~/lab": ["experiments", "notes.md", "README.md"],
@@ -167,7 +184,7 @@ const LabSection = () => {
     bootDone.current = true;
 
     const bootLines = [
-      "  arthur@workstation  ·  Ubuntu 22.04  ·  RTX 3060  ·  zsh 5.9",
+      "  arthur@workstation  ·  Ubuntu 22.04  ·  RTX 5080  ·  zsh 5.9",
       "",
       "$ ls ~/lab/experiments",
       ...experiments.map(
@@ -706,7 +723,7 @@ const LabSection = () => {
                           )}
                         </div>
                         <p className="text-xs text-muted-foreground/50 font-mono mb-1.5">
-                          {exp.category}
+                          <span className="mr-1">{categoryIcons[exp.category]}</span>{exp.category}
                         </p>
                         <p className="text-xs text-muted-foreground/35 leading-relaxed line-clamp-2">
                           {exp.description}
@@ -766,7 +783,7 @@ const LabSection = () => {
                     style={{ background: `hsl(${categoryColors[selectedExperiment.category]})` }}
                   />
                   <span className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-widest">
-                    {selectedExperiment.category}
+                    <span className="mr-1">{categoryIcons[selectedExperiment.category]}</span>{selectedExperiment.category}
                   </span>
                   {selectedExperiment.status === "in-progress" && (
                     <span
@@ -833,6 +850,26 @@ const LabSection = () => {
                   ))}
                 </div>
               </div>
+
+              {selectedExperiment.report.exploring && (
+                <div>
+                  <h4 className="font-mono text-[11px] text-muted-foreground/50 uppercase tracking-widest mb-3">
+                    What I'm exploring
+                  </h4>
+                  <div className="space-y-2">
+                    {selectedExperiment.report.exploring.map((item, i) => (
+                      <div
+                        key={i}
+                        className="flex items-start gap-3 text-sm text-muted-foreground/60 italic"
+                        style={{ animation: `fade-in 0.3s ease-out ${i * 0.06}s both` }}
+                      >
+                        <span className="text-muted-foreground/30 mt-0.5 flex-shrink-0">→</span>
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div>
                 <h4 className="font-mono text-[11px] text-muted-foreground/50 uppercase tracking-widest mb-3">
