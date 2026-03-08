@@ -15,6 +15,7 @@ interface ExperimentDetail {
     metrics?: { label: string; value: string }[];
     tools: string[];
     links?: { label: string; url: string }[];
+    badgeUrl?: string;
   };
 }
 
@@ -82,7 +83,8 @@ const experiments: ExperimentDetail[] = [
         { label: "Global rank", value: "Top 9%" },
       ],
       tools: ["Linux", "Networking basics", "TryHackMe", "Enumeration tools"],
-      links: [{ label: "TryHackMe Profile", url: "https://tryhackme.com" }],
+      links: [{ label: "TryHackMe Profile", url: "https://tryhackme.com/p/arthurjeaugey" }],
+      badgeUrl: "https://tryhackme.com/api/v2/badges/public-profile?userPublicId=3348157",
     },
   },
   {
@@ -891,6 +893,16 @@ const LabSection = () => {
                   ))}
                 </div>
               </div>
+
+              {selectedExperiment.report.badgeUrl && (
+                <div className="rounded-lg overflow-hidden border border-border/50">
+                  <iframe
+                    src={selectedExperiment.report.badgeUrl}
+                    style={{ border: "none", width: "100%", height: "120px", display: "block" }}
+                    title="TryHackMe Badge"
+                  />
+                </div>
+              )}
 
               {selectedExperiment.report.links && (
                 <div className="pt-2 border-t border-border">
