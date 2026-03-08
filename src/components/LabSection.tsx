@@ -1,6 +1,6 @@
 import { useStaggerReveal, useParallax } from "@/hooks/useScrollFadeIn";
 import { useRef, useState, useEffect, useCallback } from "react";
-import { X, ExternalLink, ChevronRight, Terminal } from "lucide-react";
+import { X, ExternalLink, ChevronRight } from "lucide-react";
 
 interface ExperimentDetail {
   title: string;
@@ -202,8 +202,9 @@ const LabSection = () => {
     let i = 0;
     const interval = setInterval(() => {
       if (i < bootLines.length) {
-        setTerminalLines((prev) => [...prev, bootLines[i]]);
+        const line = bootLines[i];
         i++;
+        setTerminalLines((prev) => [...prev, line]);
         scrollTerminal();
       } else {
         clearInterval(interval);
@@ -540,7 +541,7 @@ const LabSection = () => {
                 ref={terminalRef}
                 className="p-4 h-[320px] overflow-y-auto font-mono text-[11px] leading-relaxed scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] flex-shrink-0"
               >
-                {terminalLines.map((line, i) => (
+                {terminalLines.filter((line) => line != null).map((line, i) => (
                   <div
                     key={i}
                     className={`whitespace-pre-wrap ${
@@ -750,8 +751,7 @@ const LabSection = () => {
 
               {/* Helper note */}
               <p className="text-[11px] text-muted-foreground/25 font-mono pt-1 pl-1">
-                <Terminal className="inline w-3 h-3 mr-1 -mt-px" />
-                clicking a card runs{" "}
+                › clicking a card runs{" "}
                 <span className="text-muted-foreground/40">cat &lt;experiment&gt;</span> in the terminal
               </p>
             </div>
