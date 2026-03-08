@@ -141,6 +141,31 @@ const categoryColors: Record<string, string> = {
   Hardware: "150 50% 45%",
 };
 
+// File system simulation
+const fileSystem: Record<string, string[] | string> = {
+  "~": ["lab", "projects", ".bashrc", ".gitconfig"],
+  "~/lab": ["experiments", "notes.md", "README.md"],
+  "~/lab/experiments": experiments.map((e) => e.slug),
+  ...Object.fromEntries(
+    experiments.map((e) => [
+      `~/lab/experiments/${e.slug}`,
+      ["README.md", "data", "results"],
+    ])
+  ),
+};
+
+const AVAILABLE_COMMANDS = [
+  "ls",
+  "cd",
+  "cat",
+  "pwd",
+  "clear",
+  "help",
+  "whoami",
+  "date",
+  "tree",
+];
+
 const LabSection = () => {
   const { containerRef, visibleItems } = useStaggerReveal(experiments.length + 1, 120);
   const { ref: parallaxRef, offset } = useParallax(0.06);
@@ -149,119 +174,358 @@ const LabSection = () => {
   const [selectedExperiment, setSelectedExperiment] = useState<ExperimentDetail | null>(null);
   const [isDetailVisible, setIsDetailVisible] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [suggestion, setSuggestion] = useState("");
+  const [currentDir, setCurrentDir] = useState("~/lab/experiments");
+  const [commandHistory, setCommandHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  const [bootComplete, setBootComplete] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const bootDone = useRef(false);
 
   const scrollTerminal = useCallback(() => {
-    if (terminalRef.current) {
-      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-    }
+    setTimeout(() => {
+      if (terminalRef.current) {
+        terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+      }
+    }, 10);
   }, []);
 
-  // Terminal boot sequence
+  // Boot sequence — rich animation
   useEffect(() => {
     if (!visibleItems[0] || bootDone.current) return;
     bootDone.current = true;
 
-    const lines = [
-      "$ cd ~/lab",
-      "$ ls -la experiments/",
+    const bootLines = [
+      "Last login: " + new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }) + " on ttys001",
+      "",
+      "$ neofetch --short",
+      "  ┌──────────────────────┐",
+      "  │  arthur@workstation  │",
+      "  ├──────────────────────┤",
+      "  │  OS: Ubuntu 22.04    │",
+      "  │  GPU: RTX 3060 12GB  │",
+      "  │  RAM: 32GB DDR4      │",
+      "  │  Shell: zsh 5.9      │",
+      "  └──────────────────────┘",
+      "",
+      "$ cd ~/lab/experiments",
+      "$ ls -la",
       `total ${experiments.length}`,
       ...experiments.map(
-        (e) => `drwxr-xr-x  ${e.status === "in-progress" ? "⚡" : "✓"} ${e.category.toLowerCase().padEnd(10)} ${e.title}`
+        (e) =>
+          `${e.status === "in-progress" ? "⚡" : "✓"} ${e.category.toLowerCase().padEnd(10)} ${e.slug}`
       ),
       "",
-      "Click an experiment to inspect →",
+      "$ echo 'Type help for commands, or click an experiment'",
+      "Type help for commands, or click an experiment",
     ];
 
     let i = 0;
     const interval = setInterval(() => {
-      if (i < lines.length) {
-        const line = lines[i];
+      if (i < bootLines.length) {
+        const line = bootLines[i];
         i++;
         setTerminalLines((prev) => [...prev, line]);
         scrollTerminal();
       } else {
         clearInterval(interval);
+        setBootComplete(true);
+        setTimeout(() => inputRef.current?.focus(), 100);
       }
-    }, 120);
+    }, 80);
 
     return () => clearInterval(interval);
   }, [visibleItems, scrollTerminal]);
 
-  // Handle card click → type command → show detail
-  const handleCardClick = useCallback((exp: ExperimentDetail, index: number) => {
-    if (isTyping) return;
-    setIsTyping(true);
+  // Autocomplete suggestion
+  useEffect(() => {
+    if (!inputValue.trim()) {
+      setSuggestion("");
+      return;
+    }
 
-    // Close any open detail
-    setIsDetailVisible(false);
-    setSelectedExperiment(null);
+    const parts = inputValue.split(" ");
+    const cmd = parts[0];
 
-    const command = `$ cat experiments/${exp.slug}/README.md`;
-    const outputLines = [
-      "",
-      `───────────────────────────────────`,
-      `  ${exp.title}`,
-      `  [${exp.category}] — ${exp.status}`,
-      `───────────────────────────────────`,
-      "",
-      `  ${exp.report.summary.slice(0, 80)}...`,
-      "",
-      `  → Opening full report...`,
-    ];
-
-    // Type the command character by character
-    let charIndex = 0;
-    const typingLine = { current: "" };
-
-    // Add empty line for the command being typed
-    setTerminalLines((prev) => [...prev, ""]);
-    scrollTerminal();
-
-    const typeInterval = setInterval(() => {
-      if (charIndex < command.length) {
-        typingLine.current += command[charIndex];
-        charIndex++;
-        setTerminalLines((prev) => {
-          const next = [...prev];
-          next[next.length - 1] = typingLine.current;
-          return next;
-        });
-        scrollTerminal();
+    if (parts.length === 1) {
+      // Command autocomplete
+      const match = AVAILABLE_COMMANDS.find((c) => c.startsWith(cmd) && c !== cmd);
+      setSuggestion(match ? match.slice(cmd.length) : "");
+    } else if (cmd === "cat" || cmd === "cd" || cmd === "ls") {
+      // Path autocomplete
+      const arg = parts.slice(1).join(" ");
+      const dirContent = fileSystem[currentDir];
+      if (Array.isArray(dirContent)) {
+        const match = dirContent.find((f) => f.startsWith(arg) && f !== arg);
+        setSuggestion(match ? match.slice(arg.length) : "");
       } else {
-        clearInterval(typeInterval);
-
-        // After command typed, output result lines
-        let outIndex = 0;
-        const outInterval = setInterval(() => {
-          if (outIndex < outputLines.length) {
-            const line = outputLines[outIndex];
-            outIndex++;
-            setTerminalLines((prev) => [...prev, line]);
-            scrollTerminal();
-          } else {
-            clearInterval(outInterval);
-            // Show the detail card
-            setSelectedExperiment(exp);
-            setTimeout(() => {
-              setIsDetailVisible(true);
-              setIsTyping(false);
-            }, 100);
-          }
-        }, 60);
+        setSuggestion("");
       }
-    }, 35);
-  }, [isTyping, scrollTerminal]);
+    } else {
+      setSuggestion("");
+    }
+  }, [inputValue, currentDir]);
+
+  // Execute command
+  const executeCommand = useCallback(
+    (rawCmd: string) => {
+      const cmd = rawCmd.trim();
+      if (!cmd) return;
+
+      setCommandHistory((prev) => [...prev, cmd]);
+      setHistoryIndex(-1);
+      setTerminalLines((prev) => [...prev, `$ ${cmd}`]);
+
+      const parts = cmd.split(/\s+/);
+      const command = parts[0];
+      const args = parts.slice(1).join(" ");
+
+      switch (command) {
+        case "help": {
+          const helpLines = [
+            "",
+            "Available commands:",
+            "  ls [path]       List directory contents",
+            "  cd <path>       Change directory",
+            "  cat <file>      View experiment report",
+            "  pwd             Print working directory",
+            "  tree            Show directory tree",
+            "  whoami          Display current user",
+            "  date            Show current date",
+            "  clear           Clear terminal",
+            "  help            Show this message",
+            "",
+            "Try: cat local-llms",
+            "",
+          ];
+          setTerminalLines((prev) => [...prev, ...helpLines]);
+          break;
+        }
+        case "clear": {
+          setTerminalLines([]);
+          break;
+        }
+        case "pwd": {
+          setTerminalLines((prev) => [...prev, currentDir]);
+          break;
+        }
+        case "whoami": {
+          setTerminalLines((prev) => [...prev, "arthur"]);
+          break;
+        }
+        case "date": {
+          setTerminalLines((prev) => [
+            ...prev,
+            new Date().toString(),
+          ]);
+          break;
+        }
+        case "tree": {
+          const treeLines = [
+            ".",
+            "├── local-llms/",
+            "│   ├── README.md",
+            "│   ├── data/",
+            "│   └── results/",
+            "├── quantization/",
+            "│   ├── README.md",
+            "│   ├── data/",
+            "│   └── results/",
+            "├── tryhackme/",
+            "│   ├── README.md",
+            "│   ├── data/",
+            "│   └── results/",
+            "├── workstation/",
+            "│   ├── README.md",
+            "│   ├── data/",
+            "│   └── results/",
+            "└── 3d-printing/",
+            "    ├── README.md",
+            "    ├── data/",
+            "    └── results/",
+            "",
+            `${experiments.length} directories`,
+          ];
+          setTerminalLines((prev) => [...prev, ...treeLines]);
+          break;
+        }
+        case "ls": {
+          const targetDir = args ? resolvePath(currentDir, args) : currentDir;
+          const content = fileSystem[targetDir];
+          if (content && Array.isArray(content)) {
+            const formatted = content
+              .map((f) => {
+                const isDir = fileSystem[`${targetDir}/${f}`];
+                return isDir ? `\x1bdir:${f}/` : f;
+              })
+              .join("  ");
+            setTerminalLines((prev) => [...prev, formatted]);
+          } else {
+            setTerminalLines((prev) => [...prev, `ls: cannot access '${args}': No such file or directory`]);
+          }
+          break;
+        }
+        case "cd": {
+          if (!args || args === "~") {
+            setCurrentDir("~");
+          } else if (args === "..") {
+            const parent = currentDir.split("/").slice(0, -1).join("/") || "~";
+            setCurrentDir(parent);
+          } else {
+            const newDir = resolvePath(currentDir, args);
+            if (fileSystem[newDir]) {
+              setCurrentDir(newDir);
+            } else {
+              setTerminalLines((prev) => [...prev, `cd: no such directory: ${args}`]);
+            }
+          }
+          break;
+        }
+        case "cat": {
+          const slug = args.replace(/\/?README\.md$/, "").replace(/^experiments\//, "").replace(/\/$/, "");
+          const exp = experiments.find((e) => e.slug === slug);
+          if (exp) {
+            // Animate output then open detail
+            setIsTyping(true);
+            const outputLines = [
+              "",
+              `───────────────────────────────────`,
+              `  ${exp.title}`,
+              `  [${exp.category}] — ${exp.status}`,
+              `───────────────────────────────────`,
+              "",
+              `  ${exp.report.summary.slice(0, 80)}...`,
+              "",
+              `  → Opening full report...`,
+            ];
+
+            let oi = 0;
+            const outInterval = setInterval(() => {
+              if (oi < outputLines.length) {
+                const line = outputLines[oi];
+                oi++;
+                setTerminalLines((prev) => [...prev, line]);
+                scrollTerminal();
+              } else {
+                clearInterval(outInterval);
+                setSelectedExperiment(exp);
+                setTimeout(() => {
+                  setIsDetailVisible(true);
+                  setIsTyping(false);
+                }, 200);
+              }
+            }, 50);
+          } else {
+            setTerminalLines((prev) => [
+              ...prev,
+              `cat: ${args || "(no file)"}: No such file or directory`,
+              `Available: ${experiments.map((e) => e.slug).join(", ")}`,
+            ]);
+          }
+          break;
+        }
+        default: {
+          setTerminalLines((prev) => [
+            ...prev,
+            `zsh: command not found: ${command}`,
+            `Type 'help' for available commands`,
+          ]);
+        }
+      }
+
+      scrollTerminal();
+    },
+    [currentDir, scrollTerminal]
+  );
+
+  const resolvePath = (base: string, relative: string): string => {
+    if (relative.startsWith("~/") || relative === "~") return relative;
+    if (relative.startsWith("/")) return relative;
+    return `${base}/${relative}`.replace(/\/+/g, "/");
+  };
+
+  // Handle keyboard
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        executeCommand(inputValue);
+        setInputValue("");
+        setSuggestion("");
+      } else if (e.key === "Tab") {
+        e.preventDefault();
+        if (suggestion) {
+          setInputValue((prev) => prev + suggestion);
+          setSuggestion("");
+        }
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (commandHistory.length > 0) {
+          const newIndex = historyIndex === -1 ? commandHistory.length - 1 : Math.max(0, historyIndex - 1);
+          setHistoryIndex(newIndex);
+          setInputValue(commandHistory[newIndex]);
+        }
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (historyIndex >= 0) {
+          const newIndex = historyIndex + 1;
+          if (newIndex >= commandHistory.length) {
+            setHistoryIndex(-1);
+            setInputValue("");
+          } else {
+            setHistoryIndex(newIndex);
+            setInputValue(commandHistory[newIndex]);
+          }
+        }
+      } else if (e.key === "l" && e.ctrlKey) {
+        e.preventDefault();
+        setTerminalLines([]);
+      }
+    },
+    [inputValue, suggestion, executeCommand, commandHistory, historyIndex]
+  );
+
+  // Card click → run cat command
+  const handleCardClick = useCallback(
+    (exp: ExperimentDetail) => {
+      if (isTyping) return;
+      setInputValue("");
+      setSuggestion("");
+
+      // Type the cat command letter by letter
+      const command = `cat ${exp.slug}`;
+      let ci = 0;
+      setIsTyping(true);
+
+      const typeInterval = setInterval(() => {
+        if (ci < command.length) {
+          const char = command[ci];
+          ci++;
+          setInputValue((prev) => prev + char);
+        } else {
+          clearInterval(typeInterval);
+          setTimeout(() => {
+            setInputValue("");
+            executeCommand(command);
+            setIsTyping(false);
+          }, 200);
+        }
+      }, 40);
+    },
+    [isTyping, executeCommand]
+  );
 
   const closeDetail = useCallback(() => {
     setIsDetailVisible(false);
     setTimeout(() => {
       setSelectedExperiment(null);
-      setTerminalLines((prev) => [...prev, "", "$ _"]);
       scrollTerminal();
     }, 400);
   }, [scrollTerminal]);
+
+  // Derive short dir for prompt
+  const promptDir = currentDir.replace("~/lab/experiments", "~/lab/exp").replace("~/lab", "~/lab");
 
   return (
     <section id="lab" className="py-24 sm:py-32 relative">
@@ -287,8 +551,13 @@ const LabSection = () => {
               transform: visibleItems[0] ? "translateY(0)" : "translateY(20px)",
             }}
           >
-            <div className="flex items-center gap-2 mb-4">
-              <span className="font-mono text-xs text-muted-foreground/40 tracking-wider">~/lab</span>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
+                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(45 80% 50% / 0.6)" }} />
+                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(140 60% 45% / 0.6)" }} />
+              </div>
+              <span className="font-mono text-xs text-muted-foreground/50">~/lab</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">Lab</h2>
@@ -306,25 +575,31 @@ const LabSection = () => {
                 opacity: visibleItems[0] ? 1 : 0,
                 transform: visibleItems[0] ? "translateX(0)" : "translateX(-30px)",
               }}
+              onClick={() => inputRef.current?.focus()}
             >
+              {/* Terminal title bar */}
               <div className="px-4 py-2.5 border-b border-border flex items-center gap-2">
                 <div className="flex gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
                   <div className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(45 80% 50% / 0.6)" }} />
                   <div className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(140 60% 45% / 0.6)" }} />
                 </div>
-                <span className="font-mono text-[10px] text-muted-foreground/50 ml-2">arthur@lab:~/experiments</span>
+                <span className="font-mono text-[10px] text-muted-foreground/50 ml-2">
+                  arthur@lab:{promptDir}
+                </span>
                 {isTyping && (
                   <span className="ml-auto font-mono text-[9px] text-muted-foreground/30 animate-pulse">running...</span>
                 )}
               </div>
+
+              {/* Terminal body */}
               <div
                 ref={terminalRef}
-                className="p-4 h-[360px] overflow-y-auto font-mono text-[11px] leading-relaxed scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
+                className="p-4 h-[400px] overflow-y-auto font-mono text-[11px] leading-relaxed scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
               >
                 {terminalLines.map((line, i) => (
                   <div
-                    key={i}
+                    key={`${i}-${line.slice(0, 10)}`}
                     className={`whitespace-pre-wrap ${
                       line.startsWith("$")
                         ? "text-foreground/80"
@@ -332,12 +607,18 @@ const LabSection = () => {
                         ? "text-muted-foreground/30"
                         : line.startsWith("  →")
                         ? "text-foreground/60"
+                        : line.startsWith("  │") || line.startsWith("  ├") || line.startsWith("  └") || line.startsWith("  ┌") || line.startsWith("  ┐")
+                        ? "text-muted-foreground/50"
                         : line.includes("⚡")
                         ? "text-muted-foreground"
                         : line.includes("✓")
                         ? "text-muted-foreground/60"
-                        : line === "Click an experiment to inspect →"
-                        ? "text-muted-foreground/30 italic"
+                        : line.startsWith("├") || line.startsWith("│") || line.startsWith("└") || line.startsWith(".")
+                        ? "text-muted-foreground/50"
+                        : line.startsWith("Available")
+                        ? "text-muted-foreground/40 italic"
+                        : line.startsWith("  ")
+                        ? "text-muted-foreground/50"
                         : "text-muted-foreground/40"
                     }`}
                   >
@@ -351,19 +632,51 @@ const LabSection = () => {
                         <span style={{ color: "hsl(210 60% 60%)" }}>  →</span>
                         {line.slice(3)}
                       </>
+                    ) : line.startsWith("\x1bdir:") ? (
+                      <span style={{ color: "hsl(210 60% 65%)" }}>{line.replace("\x1bdir:", "")}</span>
+                    ) : line.includes("command not found") || line.includes("No such file") || line.includes("cannot access") ? (
+                      <span style={{ color: "hsl(0 60% 60%)" }}>{line}</span>
                     ) : (
                       line
                     )}
                   </div>
                 ))}
-                {/* Blinking cursor when idle */}
-                {!isTyping && (
+
+                {/* Input line */}
+                {bootComplete && !isTyping && (
+                  <div className="flex items-center mt-0.5">
+                    <span style={{ color: "hsl(140 50% 55%)" }}>$</span>
+                    <span className="ml-1 relative">
+                      <span className="text-foreground/80">{inputValue}</span>
+                      <span className="text-muted-foreground/20">{suggestion}</span>
+                      <span
+                        className="inline-block w-1.5 h-3.5 bg-foreground/60 ml-px -mb-0.5"
+                        style={{ animation: "blink-cursor 1s step-end infinite" }}
+                      />
+                    </span>
+                  </div>
+                )}
+
+                {/* Boot cursor */}
+                {!bootComplete && (
                   <span
                     className="inline-block w-1.5 h-3 bg-foreground/50"
                     style={{ animation: "blink-cursor 1s step-end infinite" }}
                   />
                 )}
               </div>
+
+              {/* Hidden input */}
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="sr-only"
+                aria-label="Terminal input"
+                disabled={!bootComplete || isTyping}
+              />
             </div>
 
             {/* Experiment cards */}
@@ -378,7 +691,7 @@ const LabSection = () => {
                     key={exp.title}
                     onMouseEnter={() => setActiveIndex(i)}
                     onMouseLeave={() => setActiveIndex(null)}
-                    onClick={() => handleCardClick(exp, i)}
+                    onClick={() => handleCardClick(exp)}
                     className={`group relative rounded-lg border overflow-hidden cursor-pointer transition-all duration-300 ${
                       isSelected
                         ? "border-foreground/20 bg-card"
@@ -387,7 +700,9 @@ const LabSection = () => {
                     style={{
                       opacity: visibleItems[i] ? 1 : 0,
                       transform: visibleItems[i]
-                        ? isActive ? "translateX(4px)" : "translateX(0)"
+                        ? isActive
+                          ? "translateX(4px)"
+                          : "translateX(0)"
                         : "translateY(20px)",
                       transition: "opacity 0.5s ease-out, transform 0.3s ease-out, border-color 0.3s, background-color 0.3s",
                     }}
@@ -417,9 +732,7 @@ const LabSection = () => {
                         </div>
                         <p className="text-xs text-muted-foreground/50 font-mono">{exp.category}</p>
                       </div>
-                      <ChevronRight
-                        className="h-4 w-4 text-muted-foreground/20 group-hover:text-muted-foreground/50 transition-all duration-300 group-hover:translate-x-0.5"
-                      />
+                      <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-muted-foreground/50 transition-all duration-300 group-hover:translate-x-0.5" />
                     </div>
                   </div>
                 );
@@ -439,13 +752,8 @@ const LabSection = () => {
             pointerEvents: isDetailVisible ? "auto" : "none",
           }}
         >
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-background/80 backdrop-blur-md"
-            onClick={closeDetail}
-          />
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-md" onClick={closeDetail} />
 
-          {/* Detail card */}
           <div
             className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-border bg-card scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]"
             style={{
@@ -453,14 +761,10 @@ const LabSection = () => {
               transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            {/* Header */}
             <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border px-6 py-4 flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span
-                    className="w-2 h-2 rounded-full"
-                    style={{ background: `hsl(${categoryColors[selectedExperiment.category]})` }}
-                  />
+                  <span className="w-2 h-2 rounded-full" style={{ background: `hsl(${categoryColors[selectedExperiment.category]})` }} />
                   <span className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-widest">
                     {selectedExperiment.category}
                   </span>
@@ -472,31 +776,18 @@ const LabSection = () => {
                 </div>
                 <h3 className="text-xl font-bold text-foreground">{selectedExperiment.title}</h3>
               </div>
-              <button
-                onClick={closeDetail}
-                className="p-2 -mr-2 -mt-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-              >
+              <button onClick={closeDetail} className="p-2 -mr-2 -mt-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="px-6 py-6 space-y-6">
-              {/* Summary */}
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {selectedExperiment.report.summary}
-              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{selectedExperiment.report.summary}</p>
 
-              {/* Metrics */}
               {selectedExperiment.report.metrics && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {selectedExperiment.report.metrics.map((m, i) => (
-                    <div
-                      key={m.label}
-                      className="rounded-lg border border-border bg-secondary/30 p-3 text-center"
-                      style={{
-                        animation: `fade-in 0.3s ease-out ${i * 0.08}s both`,
-                      }}
-                    >
+                    <div key={m.label} className="rounded-lg border border-border bg-secondary/30 p-3 text-center" style={{ animation: `fade-in 0.3s ease-out ${i * 0.08}s both` }}>
                       <div className="text-lg font-bold text-foreground font-mono">{m.value}</div>
                       <div className="text-[10px] text-muted-foreground/60 uppercase tracking-wider mt-1">{m.label}</div>
                     </div>
@@ -504,52 +795,31 @@ const LabSection = () => {
                 </div>
               )}
 
-              {/* Highlights */}
               <div>
                 <h4 className="font-mono text-[11px] text-muted-foreground/50 uppercase tracking-widest mb-3">Key Findings</h4>
                 <div className="space-y-2">
                   {selectedExperiment.report.highlights.map((h, i) => (
-                    <div
-                      key={i}
-                      className="flex items-start gap-3 text-sm text-muted-foreground"
-                      style={{ animation: `fade-in 0.3s ease-out ${i * 0.06}s both` }}
-                    >
-                      <span
-                        className="w-1 h-1 rounded-full mt-2 flex-shrink-0"
-                        style={{ background: `hsl(${categoryColors[selectedExperiment.category]})` }}
-                      />
+                    <div key={i} className="flex items-start gap-3 text-sm text-muted-foreground" style={{ animation: `fade-in 0.3s ease-out ${i * 0.06}s both` }}>
+                      <span className="w-1 h-1 rounded-full mt-2 flex-shrink-0" style={{ background: `hsl(${categoryColors[selectedExperiment.category]})` }} />
                       {h}
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Tools */}
               <div>
                 <h4 className="font-mono text-[11px] text-muted-foreground/50 uppercase tracking-widest mb-3">Stack</h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedExperiment.report.tools.map((tool) => (
-                    <span
-                      key={tool}
-                      className="font-mono text-xs text-muted-foreground/70 bg-secondary px-2.5 py-1 rounded-md"
-                    >
-                      {tool}
-                    </span>
+                    <span key={tool} className="font-mono text-xs text-muted-foreground/70 bg-secondary px-2.5 py-1 rounded-md">{tool}</span>
                   ))}
                 </div>
               </div>
 
-              {/* Links */}
               {selectedExperiment.report.links && (
                 <div className="pt-2 border-t border-border">
                   {selectedExperiment.report.links.map((link) => (
-                    <a
-                      key={link.url}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm text-foreground/70 hover:text-foreground transition-colors group"
-                    >
+                    <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm text-foreground/70 hover:text-foreground transition-colors group">
                       <ExternalLink className="h-3.5 w-3.5" />
                       <span className="relative">
                         {link.label}
@@ -561,7 +831,6 @@ const LabSection = () => {
               )}
             </div>
 
-            {/* Footer terminal hint */}
             <div className="px-6 py-3 border-t border-border bg-secondary/20">
               <span className="font-mono text-[10px] text-muted-foreground/30">
                 experiments/{selectedExperiment.slug}/README.md — {selectedExperiment.report.highlights.length} findings · {selectedExperiment.report.tools.length} tools
