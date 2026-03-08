@@ -1,6 +1,6 @@
 import { useStaggerReveal, useParallax } from "@/hooks/useScrollFadeIn";
 import { useRef, useState, useEffect, useCallback } from "react";
-import { X, ExternalLink, ChevronRight, Terminal } from "lucide-react";
+import { X, ExternalLink, ChevronRight } from "lucide-react";
 
 interface ExperimentDetail {
   title: string;
@@ -750,8 +750,7 @@ const LabSection = () => {
 
               {/* Helper note */}
               <p className="text-[11px] text-muted-foreground/25 font-mono pt-1 pl-1">
-                <Terminal className="inline w-3 h-3 mr-1 -mt-px" />
-                clicking a card runs{" "}
+                › clicking a card runs{" "}
                 <span className="text-muted-foreground/40">cat &lt;experiment&gt;</span> in the terminal
               </p>
             </div>
