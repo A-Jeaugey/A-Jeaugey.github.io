@@ -4,8 +4,8 @@ const COLS = 28;
 const ROWS = 16;
 const STICK_HEIGHT = 32;
 const STICK_WIDTH = 1.5;
-const MOUSE_RADIUS = 250;
-const GRAVITY_STRENGTH = 0.7;
+const MOUSE_RADIUS = 260;
+const GRAVITY_STRENGTH = 0.5;
 
 interface Stick {
   x: number;
