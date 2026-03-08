@@ -148,7 +148,7 @@ const fileSystem: Record<string, string[] | string> = {
   ...Object.fromEntries(
     experiments.map((e) => [
       `~/lab/experiments/${e.slug}`,
-      ["README.md", "data", "results"],
+      ["README.md", "results"],
     ])
   ),
 };
