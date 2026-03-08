@@ -86,20 +86,25 @@ const experiments: ExperimentDetail[] = [
     },
   },
   {
-    title: "High-End Workstation Build",
-    description: "Building and optimizing my own machine for development, local AI experimentation and high-performance workloads.",
+    title: "PC Building — 4 Builds & Counting",
+    description: "Building PCs from scratch and salvaging prebuilds — choosing components, fixing incompatibilities, and learning how the hardware actually works.",
     category: "Hardware",
-    status: "completed",
+    status: "in-progress",
     slug: "workstation",
     report: {
-      summary: "I built and tuned my own workstation around high-end consumer hardware, mainly for software work, local AI experiments and overall performance. Beyond the build itself, I'm interested in how hardware choices affect real usage.",
+      summary: "What started as building my own machine turned into a real passion for PC hardware. I've built 4 PCs so far — from a fully custom high-end workstation to Frankenstein machines assembled from prebuild leftovers. Each one taught me something different about compatibility, trade-offs and how the hardware really works.",
       highlights: [
-        "Built a machine around Ryzen 9 9950X3D and RTX 5080",
-        "Explored performance, cooling and component choices in detail",
-        "Used the setup for local model experiments and heavy technical workflows",
-        "Developed a stronger interest in the link between hardware and software performance",
+        "Built my own workstation from scratch: R9 9950X3D, RTX 5080, 64GB RAM, Samsung 9100 Pro, X870E-E — every component chosen and compared manually",
+        "Rebuilt my brother's PC from an old ASUS ROG prebuild — new motherboard and PSU to support a proper GPU upgrade",
+        "Upgraded my little brother's HP Omen: identified the performance bottlenecks and replaced only what actually mattered",
+        "Built a Frankenstein PC for my brother's girlfriend from 3 prebuilds and spare parts — manually flashed BIOS for CPU compatibility and repaired bent CPU pins",
       ],
-      tools: ["RTX 5080", "Ryzen 9 9950X3D", "Custom PC building", "Performance tuning"],
+      exploring: [
+        "How to identify real bottlenecks vs. marketing noise in prebuild hardware",
+        "Component compatibility edge cases that documentation doesn't cover",
+        "The gap between spec sheet numbers and actual real-world performance",
+      ],
+      tools: ["RTX 5080", "Ryzen 9 9950X3D", "X870E-E", "Samsung 9100 Pro", "BIOS flashing", "Component sourcing"],
     },
   },
   {
@@ -119,7 +124,7 @@ const experiments: ExperimentDetail[] = [
       metrics: [
         { label: "Files sold", value: "2" },
       ],
-      tools: ["3D printer", "LaserPecker LP2", "3D modeling / slicing workflow"],
+      tools: ["3D printer", "LaserPecker LP2", "Pinecil soldering iron", "3D modeling / slicing workflow"],
     },
   },
 ];
