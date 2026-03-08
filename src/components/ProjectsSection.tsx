@@ -1,5 +1,5 @@
 import ProjectCard from "./ProjectCard";
-import { useScrollFadeIn } from "@/hooks/useScrollFadeIn";
+import { useStaggerReveal, useParallax } from "@/hooks/useScrollFadeIn";
 
 const projects = [
   {
@@ -26,18 +26,27 @@ const projects = [
 ];
 
 const ProjectsSection = () => {
-  const ref = useScrollFadeIn();
+  const { containerRef, visibleItems } = useStaggerReveal(projects.length, 150);
+  const { ref: parallaxRef, offset } = useParallax(0.08);
 
   return (
     <section id="projects" className="py-24 sm:py-32">
-      <div ref={ref} className="fade-section max-w-5xl mx-auto px-6">
-        <h2 className="text-sm font-mono text-muted-foreground mb-10 tracking-wider uppercase">
-          Projects
-        </h2>
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard key={project.title} {...project} />
-          ))}
+      <div ref={parallaxRef} className="max-w-5xl mx-auto px-6" style={{ transform: `translateY(${offset}px)` }}>
+        <div ref={containerRef}>
+          <h2
+            className="text-sm font-mono text-muted-foreground mb-10 tracking-wider uppercase transition-all duration-700"
+            style={{
+              opacity: visibleItems[0] ? 1 : 0,
+              transform: visibleItems[0] ? "translateX(0)" : "translateX(-20px)",
+            }}
+          >
+            Projects
+          </h2>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {projects.map((project, i) => (
+              <ProjectCard key={project.title} {...project} visible={visibleItems[i]} index={i} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
