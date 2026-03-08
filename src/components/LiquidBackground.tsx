@@ -4,8 +4,8 @@ const COLS = 28;
 const ROWS = 16;
 const STICK_HEIGHT = 32;
 const STICK_WIDTH = 1.5;
-const MOUSE_RADIUS = 250;
-const GRAVITY_STRENGTH = 0.7;
+const MOUSE_RADIUS = 260;
+const GRAVITY_STRENGTH = 0.5;
 
 interface Stick {
   x: number;
@@ -84,9 +84,9 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
     const animate = () => {
       ctx.clearRect(0, 0, w, h);
 
-      // Very slow smooth mouse for viscous, delayed feel
-      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * 0.04;
-      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * 0.04;
+      // Slower mouse smoothing for a heavier, more viscous feel
+      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * 0.02;
+      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * 0.02;
 
       const mx = smoothMouseRef.current.x;
       const my = smoothMouseRef.current.y;
@@ -96,11 +96,11 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
         const dy = my - stick.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        const MAX_ANGLE = Math.PI * 0.35;
+        const MAX_ANGLE = Math.PI * 0.28;
 
         if (dist < MOUSE_RADIUS && dist > 20) {
           const angleToMouse = Math.atan2(dx, -dy);
-          const influence = Math.pow(1 - dist / MOUSE_RADIUS, 2) * GRAVITY_STRENGTH;
+          const influence = Math.pow(1 - dist / MOUSE_RADIUS, 2.4) * GRAVITY_STRENGTH;
           const raw = angleToMouse * influence;
           stick.targetAngle = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, raw));
         } else {
@@ -112,10 +112,10 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
         while (diff > Math.PI) diff -= Math.PI * 2;
         while (diff < -Math.PI) diff += Math.PI * 2;
 
-        const force = diff * 0.025;
-        stick.velocity = stick.velocity * 0.85 + force;
-        // Clamp velocity to prevent fast spins
-        stick.velocity = Math.max(-0.04, Math.min(0.04, stick.velocity));
+        const force = diff * 0.014;
+        stick.velocity = stick.velocity * 0.92 + force;
+        // Clamp velocity harder to keep motion premium and slow
+        stick.velocity = Math.max(-0.02, Math.min(0.02, stick.velocity));
         stick.angle += stick.velocity;
 
         const halfH = STICK_HEIGHT / 2;
