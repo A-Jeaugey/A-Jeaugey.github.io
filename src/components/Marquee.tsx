@@ -20,15 +20,21 @@ const Marquee = () => {
       <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-background to-transparent" />
       <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-background to-transparent" />
 
-      <div className="flex whitespace-nowrap" style={{ animation: "marquee-scroll 40s linear infinite" }}>
-        {[...items, ...items].map((item, i) => (
+      <div className="flex whitespace-nowrap" style={{ animation: "marquee-scroll 25s linear infinite" }}>
+        {[...items, ...items].flatMap((item, i) => [
           <span
-            key={i}
-            className="font-mono text-sm text-muted-foreground/30 mx-8 uppercase tracking-widest select-none"
+            key={`item-${i}`}
+            className="font-mono text-sm text-muted-foreground/55 mx-6 uppercase tracking-widest select-none"
           >
             {item}
-          </span>
-        ))}
+          </span>,
+          <span
+            key={`dot-${i}`}
+            className="font-mono text-muted-foreground/20 select-none mx-2"
+          >
+            ·
+          </span>,
+        ])}
       </div>
     </div>
   );

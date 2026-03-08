@@ -49,14 +49,16 @@ const AboutSection = () => {
           <h2 className="text-sm font-mono text-muted-foreground mb-8 tracking-wider uppercase">
             About
           </h2>
-          <div ref={pContainerRef} className="space-y-4">
+          <div ref={pContainerRef} className="space-y-5">
             {paragraphs.map((text, i) => (
               <p
                 key={i}
-                className="text-muted-foreground leading-relaxed transition-all duration-700 ease-out"
+                className="leading-relaxed transition-all duration-700 ease-out"
                 style={{
                   opacity: visibleP[i] ? 1 : 0,
                   transform: visibleP[i] ? "translateY(0)" : "translateY(16px)",
+                  color: i === 0 ? "hsl(0 0% 80%)" : "hsl(240 5% 50%)",
+                  fontSize: i === 0 ? "1rem" : "0.9375rem",
                 }}
               >
                 {text}
