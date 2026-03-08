@@ -15,16 +15,15 @@ interface Stick {
   velocity: number;
 }
 
-// Iridescent chrome/oxidized color based on angle and proximity
+// Chrome metallic color — silver/steel with subtle warm-cool shift
 const getChromaColor = (angle: number, proximity: number): string => {
-  // Shift hue based on stick angle to create iridescence
   const absAngle = Math.abs(angle);
-  // Base: muted purple. Near mouse: shift through chrome teal → rose → gold
-  const hue = 260 + absAngle * 180 + proximity * 40;
-  const saturation = 20 + proximity * 50;
-  const lightness = 35 + proximity * 30;
-  const alpha = 0.15 + proximity * 0.55;
-  return `hsla(${hue % 360}, ${saturation}%, ${lightness}%, ${alpha})`;
+  // Low saturation for true metallic feel, slight blue-steel shift with angle
+  const hue = 210 + absAngle * 30;
+  const saturation = 3 + proximity * 8;
+  const lightness = 25 + proximity * 45;
+  const alpha = 0.12 + proximity * 0.6;
+  return `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
 };
 
 const LiquidBackground = ({ className = "" }: { className?: string }) => {
