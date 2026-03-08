@@ -287,13 +287,8 @@ const LabSection = () => {
               transform: visibleItems[0] ? "translateY(0)" : "translateY(20px)",
             }}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(45 80% 50% / 0.6)" }} />
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(140 60% 45% / 0.6)" }} />
-              </div>
-              <span className="font-mono text-xs text-muted-foreground/50">~/lab</span>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="font-mono text-xs text-muted-foreground/40 tracking-wider">~/lab</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">Lab</h2>
@@ -313,8 +308,12 @@ const LabSection = () => {
               }}
             >
               <div className="px-4 py-2.5 border-b border-border flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-foreground/10" />
-                <span className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-wider">Terminal</span>
+                <div className="flex gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(45 80% 50% / 0.6)" }} />
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "hsl(140 60% 45% / 0.6)" }} />
+                </div>
+                <span className="font-mono text-[10px] text-muted-foreground/50 ml-2">arthur@lab:~/experiments</span>
                 {isTyping && (
                   <span className="ml-auto font-mono text-[9px] text-muted-foreground/30 animate-pulse">running...</span>
                 )}
