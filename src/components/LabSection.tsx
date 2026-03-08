@@ -69,8 +69,9 @@ const LabSection = () => {
     let i = 0;
     const interval = setInterval(() => {
       if (i < lines.length) {
-        setTerminalLines((prev) => [...prev, lines[i]]);
+        const line = lines[i];
         i++;
+        setTerminalLines((prev) => [...prev, line]);
         if (terminalRef.current) {
           terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
         }
