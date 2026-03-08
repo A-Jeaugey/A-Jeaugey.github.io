@@ -188,7 +188,7 @@ const LabSection = () => {
       "",
       "$ ls ~/lab/experiments",
       ...experiments.map(
-        (e) => `${e.status === "in-progress" ? "⚡" : "✓"} ${e.slug.padEnd(20)} [${e.category}]`
+        (e) => `${e.status === "in-progress" ? "⚡" : "✓"} ${e.slug.padEnd(20)} [${categoryIcons[e.category]} ${e.category}]`
       ),
       "",
       "Ready — type a command or click an experiment",
@@ -492,7 +492,7 @@ const LabSection = () => {
 
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">Lab</h2>
             <p className="text-muted-foreground text-sm max-w-md">
-              Where I break things, benchmark stuff, and push hardware to its limits.{" "}
+              Where I explore systems, break things, and document what I learn.{" "}
               <span className="text-muted-foreground/40">
                 Click a card or type in the terminal to explore.
               </span>
