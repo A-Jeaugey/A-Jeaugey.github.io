@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 
-const COLS = 28;
-const ROWS = 16;
-const STICK_HEIGHT = 32;
-const STICK_WIDTH = 1.5;
-const MOUSE_RADIUS = 260;
-const GRAVITY_STRENGTH = 0.5;
+const COLS = 32;
+const ROWS = 18;
+const STICK_HEIGHT = 36;
+const STICK_WIDTH = 2;
+const MOUSE_RADIUS = 300;
+const GRAVITY_STRENGTH = 0.65;
 
 interface Stick {
   x: number;
@@ -14,6 +14,18 @@ interface Stick {
   targetAngle: number;
   velocity: number;
 }
+
+// Iridescent chrome/oxidized color based on angle and proximity
+const getChromaColor = (angle: number, proximity: number): string => {
+  // Shift hue based on stick angle to create iridescence
+  const absAngle = Math.abs(angle);
+  // Base: muted purple. Near mouse: shift through chrome teal → rose → gold
+  const hue = 260 + absAngle * 180 + proximity * 40;
+  const saturation = 20 + proximity * 50;
+  const lightness = 35 + proximity * 30;
+  const alpha = 0.15 + proximity * 0.55;
+  return `hsla(${hue % 360}, ${saturation}%, ${lightness}%, ${alpha})`;
+};
 
 const LiquidBackground = ({ className = "" }: { className?: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -84,9 +96,9 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
     const animate = () => {
       ctx.clearRect(0, 0, w, h);
 
-      // Slower mouse smoothing for a heavier, more viscous feel
-      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * 0.02;
-      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * 0.02;
+      // Smooth mouse — heavy viscous feel
+      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * 0.035;
+      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * 0.035;
 
       const mx = smoothMouseRef.current.x;
       const my = smoothMouseRef.current.y;
@@ -96,26 +108,25 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
         const dy = my - stick.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        const MAX_ANGLE = Math.PI * 0.28;
+        const MAX_ANGLE = Math.PI * 0.35;
 
-        if (dist < MOUSE_RADIUS && dist > 20) {
+        if (dist < MOUSE_RADIUS && dist > 15) {
           const angleToMouse = Math.atan2(dx, -dy);
-          const influence = Math.pow(1 - dist / MOUSE_RADIUS, 2.4) * GRAVITY_STRENGTH;
+          const influence = Math.pow(1 - dist / MOUSE_RADIUS, 2) * GRAVITY_STRENGTH;
           const raw = angleToMouse * influence;
           stick.targetAngle = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, raw));
         } else {
           stick.targetAngle = 0;
         }
 
-        // Shortest path angle difference to avoid spinning
+        // Shortest path angle difference
         let diff = stick.targetAngle - stick.angle;
         while (diff > Math.PI) diff -= Math.PI * 2;
         while (diff < -Math.PI) diff += Math.PI * 2;
 
-        const force = diff * 0.014;
-        stick.velocity = stick.velocity * 0.92 + force;
-        // Clamp velocity harder to keep motion premium and slow
-        stick.velocity = Math.max(-0.02, Math.min(0.02, stick.velocity));
+        const force = diff * 0.018;
+        stick.velocity = stick.velocity * 0.9 + force;
+        stick.velocity = Math.max(-0.028, Math.min(0.028, stick.velocity));
         stick.angle += stick.velocity;
 
         const halfH = STICK_HEIGHT / 2;
@@ -124,17 +135,30 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
         const botX = stick.x - Math.sin(stick.angle) * halfH;
         const botY = stick.y + Math.cos(stick.angle) * halfH;
 
-        const glowDist = Math.sqrt((mx - stick.x) ** 2 + (my - stick.y) ** 2);
-        const glowFactor = Math.max(0, 1 - glowDist / MOUSE_RADIUS);
-        const alpha = 0.1 + glowFactor * 0.2;
+        // Proximity factor for color shift
+        const proximity = Math.max(0, 1 - dist / MOUSE_RADIUS);
+
+        // Chrome/oxidized iridescent color
+        const color = getChromaColor(stick.angle, proximity);
 
         ctx.beginPath();
         ctx.moveTo(topX, topY);
         ctx.lineTo(botX, botY);
-        ctx.strokeStyle = `rgba(140, 120, 210, ${alpha})`;
-        ctx.lineWidth = STICK_WIDTH;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = STICK_WIDTH + proximity * 1;
         ctx.lineCap = "round";
         ctx.stroke();
+
+        // Subtle glow layer for sticks near mouse
+        if (proximity > 0.3) {
+          ctx.beginPath();
+          ctx.moveTo(topX, topY);
+          ctx.lineTo(botX, botY);
+          ctx.strokeStyle = getChromaColor(stick.angle, proximity * 0.4);
+          ctx.lineWidth = STICK_WIDTH + proximity * 4;
+          ctx.lineCap = "round";
+          ctx.stroke();
+        }
       });
 
       animRef.current = requestAnimationFrame(animate);
