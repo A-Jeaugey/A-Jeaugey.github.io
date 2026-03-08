@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
 
-const STICK_COUNT = 180;
-const STICK_HEIGHT = 40;
-const STICK_WIDTH = 2;
-const MOUSE_RADIUS = 200;
-const GRAVITY_STRENGTH = 0.6;
+const COLS = 28;
+const ROWS = 16;
+const STICK_HEIGHT = 32;
+const STICK_WIDTH = 1.5;
+const MOUSE_RADIUS = 250;
+const GRAVITY_STRENGTH = 0.7;
 
 interface Stick {
   x: number;
@@ -34,18 +35,14 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
     let h = 0;
 
     const initSticks = () => {
-      const cols = Math.ceil(Math.sqrt(STICK_COUNT * (w / h)));
-      const rows = Math.ceil(STICK_COUNT / cols);
-      const spacingX = w / (cols + 1);
-      const spacingY = h / (rows + 1);
-
+      const spacingX = w / (COLS + 1);
+      const spacingY = h / (ROWS + 1);
       sticksRef.current = [];
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          if (sticksRef.current.length >= STICK_COUNT) break;
+      for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
           sticksRef.current.push({
-            x: spacingX * (col + 1) + (Math.random() - 0.5) * spacingX * 0.4,
-            y: spacingY * (row + 1) + (Math.random() - 0.5) * spacingY * 0.4,
+            x: spacingX * (col + 1),
+            y: spacingY * (row + 1),
             angle: 0,
             targetAngle: 0,
             velocity: 0,
@@ -63,7 +60,7 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
       canvas.height = h * dpr;
       canvas.style.width = `${w}px`;
       canvas.style.height = `${h}px`;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       initSticks();
     };
 
@@ -80,16 +77,16 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
       mouseRef.current.y = -1000;
     };
 
-    container.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseleave", handleMouseLeave);
     window.addEventListener("resize", resize);
 
     const animate = () => {
       ctx.clearRect(0, 0, w, h);
 
-      // Smooth mouse with delay for viscous feel
-      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * 0.08;
-      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * 0.08;
+      // Very slow smooth mouse for viscous, delayed feel
+      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * 0.04;
+      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * 0.04;
 
       const mx = smoothMouseRef.current.x;
       const my = smoothMouseRef.current.y;
@@ -100,33 +97,27 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < MOUSE_RADIUS && dist > 1) {
-          // Angle pointing toward mouse
-          const angleToMouse = Math.atan2(dx, -dy); // rotated so 0 = vertical
-          const influence = Math.pow(1 - dist / MOUSE_RADIUS, 1.5) * GRAVITY_STRENGTH;
+          const angleToMouse = Math.atan2(dx, -dy);
+          const influence = Math.pow(1 - dist / MOUSE_RADIUS, 2) * GRAVITY_STRENGTH;
           stick.targetAngle = angleToMouse * influence;
         } else {
           stick.targetAngle = 0;
         }
 
-        // Spring physics
-        const spring = 0.08;
-        const damping = 0.82;
-        const force = (stick.targetAngle - stick.angle) * spring;
-        stick.velocity = stick.velocity * damping + force;
+        // Soft spring — low stiffness, high damping for slow smooth motion
+        const force = (stick.targetAngle - stick.angle) * 0.03;
+        stick.velocity = stick.velocity * 0.88 + force;
         stick.angle += stick.velocity;
 
-        // Draw stick
         const halfH = STICK_HEIGHT / 2;
         const topX = stick.x + Math.sin(stick.angle) * halfH;
         const topY = stick.y - Math.cos(stick.angle) * halfH;
         const botX = stick.x - Math.sin(stick.angle) * halfH;
         const botY = stick.y + Math.cos(stick.angle) * halfH;
 
-        // Opacity based on distance to mouse for subtle glow
         const glowDist = Math.sqrt((mx - stick.x) ** 2 + (my - stick.y) ** 2);
         const glowFactor = Math.max(0, 1 - glowDist / MOUSE_RADIUS);
-        const baseAlpha = 0.12;
-        const alpha = baseAlpha + glowFactor * 0.25;
+        const alpha = 0.1 + glowFactor * 0.2;
 
         ctx.beginPath();
         ctx.moveTo(topX, topY);
@@ -144,14 +135,14 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
 
     return () => {
       cancelAnimationFrame(animRef.current);
-      container.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
       window.removeEventListener("resize", resize);
     };
   }, []);
 
   return (
-    <div ref={containerRef} className={`absolute inset-0 overflow-hidden ${className}`}>
+    <div ref={containerRef} className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
     </div>
   );
