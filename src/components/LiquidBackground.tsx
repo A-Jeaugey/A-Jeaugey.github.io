@@ -15,15 +15,20 @@ interface Stick {
   velocity: number;
 }
 
-// Chrome metallic color — silver/steel with subtle warm-cool shift
+// Oxidized chrome — angle-dependent color shift like light on brushed metal
 const getChromaColor = (angle: number, proximity: number): string => {
-  const absAngle = Math.abs(angle);
-  // Low saturation for true metallic feel, slight blue-steel shift with angle
-  const hue = 210 + absAngle * 30;
-  const saturation = 3 + proximity * 8;
-  const lightness = 25 + proximity * 45;
-  const alpha = 0.12 + proximity * 0.6;
-  return `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+  const normAngle = angle / (Math.PI * 0.35); // -1 to 1
+  // Chrome shifts: cold blue-steel at rest → warm copper/bronze when angled
+  // Mix between cool and warm based on angle direction
+  const t = (normAngle + 1) / 2; // 0 to 1
+  
+  // Interpolate through chrome spectrum: teal-blue → silver → rose-copper
+  const r = Math.round(120 + t * 100 + proximity * 40);
+  const g = Math.round(130 + (1 - Math.abs(normAngle)) * 50 + proximity * 20);
+  const b = Math.round(160 - t * 80 + proximity * 10);
+  
+  const alpha = 0.1 + proximity * 0.65;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
 const LiquidBackground = ({ className = "" }: { className?: string }) => {
