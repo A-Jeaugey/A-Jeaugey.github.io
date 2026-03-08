@@ -193,8 +193,9 @@ const LabSection = () => {
   }, []);
 
   // Boot sequence — rich animation
+  const visible0 = visibleItems[0];
   useEffect(() => {
-    if (!visibleItems[0] || bootDone.current) return;
+    if (!visible0 || bootDone.current) return;
     bootDone.current = true;
 
     const bootLines = [
@@ -236,8 +237,9 @@ const LabSection = () => {
       }
     }, 80);
 
-    return () => clearInterval(interval);
-  }, [visibleItems, scrollTerminal]);
+    // Don't cleanup — bootDone ref prevents re-entry
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible0]);
 
   // Autocomplete suggestion
   useEffect(() => {
