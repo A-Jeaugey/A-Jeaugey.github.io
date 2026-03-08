@@ -83,7 +83,6 @@ const experiments: ExperimentDetail[] = [
         { label: "Global rank", value: "Top 9%" },
       ],
       tools: ["Linux", "Networking basics", "TryHackMe", "Enumeration tools"],
-      links: [{ label: "TryHackMe Profile", url: "https://tryhackme.com/p/arthurjeaugey" }],
       badgeUrl: "https://tryhackme.com/api/v2/badges/public-profile?userPublicId=3348157",
     },
   },
