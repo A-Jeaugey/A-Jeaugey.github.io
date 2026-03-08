@@ -1,24 +1,11 @@
 import { Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import LiquidBackground from "@/components/LiquidBackground";
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Gradient mesh background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full opacity-[0.07] animate-mesh-float"
-          style={{
-            background: "radial-gradient(circle, hsl(260 60% 55%) 0%, transparent 70%)",
-          }}
-        />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] rounded-full opacity-[0.05] animate-mesh-float-reverse"
-          style={{
-            background: "radial-gradient(circle, hsl(220 70% 50%) 0%, transparent 70%)",
-          }}
-        />
-      </div>
+      <LiquidBackground />
 
       <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-foreground mb-6">
