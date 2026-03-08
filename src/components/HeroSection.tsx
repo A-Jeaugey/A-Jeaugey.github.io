@@ -143,6 +143,22 @@ const HeroSection = () => {
           </MagneticButton>
         </div>
       </div>
+
+      {/* Scroll indicator */}
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        style={{
+          opacity: loaded ? 1 : 0,
+          transition: "opacity 1s ease-out 2s",
+        }}
+      >
+        <div className="w-px h-10 overflow-hidden relative">
+          <div
+            className="absolute w-full h-full bg-gradient-to-b from-transparent via-foreground/30 to-transparent"
+            style={{ animation: "scroll-line 2s ease-in-out infinite" }}
+          />
+        </div>
+      </div>
     </section>
   );
 };
