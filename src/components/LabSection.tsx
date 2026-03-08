@@ -128,7 +128,7 @@ const LabSection = () => {
           <div className="grid lg:grid-cols-5 gap-6">
             {/* Mini terminal */}
             <div
-              className="lg:col-span-2 rounded-xl border border-border bg-card/80 overflow-hidden transition-all duration-700"
+              className="lg:col-span-2 rounded-xl border border-border bg-card/80 overflow-hidden transition-all duration-700 self-start lg:sticky lg:top-24"
               style={{
                 opacity: visibleItems[0] ? 1 : 0,
                 transform: visibleItems[0] ? "translateX(0)" : "translateX(-30px)",
