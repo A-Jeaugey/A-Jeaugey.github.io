@@ -635,8 +635,8 @@ const LabSection = () => {
                         <span style={{ color: "hsl(210 60% 60%)" }}>  →</span>
                         {line.slice(3)}
                       </>
-                    ) : line.startsWith("\x1bdir:") ? (
-                      <span style={{ color: "hsl(210 60% 65%)" }}>{line.replace("\x1bdir:", "")}</span>
+                    ) : line.startsWith("DIR:") ? (
+                      <span style={{ color: "hsl(210 60% 65%)" }}>{line.slice(4)}</span>
                     ) : line.includes("command not found") || line.includes("No such file") || line.includes("cannot access") ? (
                       <span style={{ color: "hsl(0 60% 60%)" }}>{line}</span>
                     ) : (
