@@ -96,17 +96,26 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
         const dy = my - stick.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < MOUSE_RADIUS && dist > 1) {
+        const MAX_ANGLE = Math.PI * 0.35;
+
+        if (dist < MOUSE_RADIUS && dist > 20) {
           const angleToMouse = Math.atan2(dx, -dy);
           const influence = Math.pow(1 - dist / MOUSE_RADIUS, 2) * GRAVITY_STRENGTH;
-          stick.targetAngle = angleToMouse * influence;
+          const raw = angleToMouse * influence;
+          stick.targetAngle = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, raw));
         } else {
           stick.targetAngle = 0;
         }
 
-        // Soft spring — low stiffness, high damping for slow smooth motion
-        const force = (stick.targetAngle - stick.angle) * 0.03;
-        stick.velocity = stick.velocity * 0.88 + force;
+        // Shortest path angle difference to avoid spinning
+        let diff = stick.targetAngle - stick.angle;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+
+        const force = diff * 0.025;
+        stick.velocity = stick.velocity * 0.85 + force;
+        // Clamp velocity to prevent fast spins
+        stick.velocity = Math.max(-0.04, Math.min(0.04, stick.velocity));
         stick.angle += stick.velocity;
 
         const halfH = STICK_HEIGHT / 2;
