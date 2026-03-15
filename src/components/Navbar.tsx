@@ -2,27 +2,40 @@ import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import MagneticButton from "@/components/MagneticButton";
-
-const links = [
-  { label: "Projects", href: "#projects" },
-  { label: "Lab", href: "#lab" },
-  { label: "About", href: "#about" },
-];
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
+  const { lang, setLang, t } = useLanguage();
+
+  const links = [
+    { label: t("nav.projects"), href: "#projects" },
+    { label: t("nav.lab"), href: "#lab" },
+    { label: t("nav.about"), href: "#about" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
-    const t = setTimeout(() => setVisible(true), 800);
+    const timer = setTimeout(() => setVisible(true), 800);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      clearTimeout(t);
+      clearTimeout(timer);
     };
   }, []);
+
+  const LanguageToggle = () => (
+    <button
+      onClick={() => setLang(lang === "en" ? "fr" : "en")}
+      className="font-mono text-xs flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+    >
+      <span className={lang === "fr" ? "text-foreground" : "text-muted-foreground/40"}>FR</span>
+      <span className="text-muted-foreground/20">/</span>
+      <span className={lang === "en" ? "text-foreground" : "text-muted-foreground/40"}>EN</span>
+    </button>
+  );
 
   return (
     <nav
@@ -61,10 +74,15 @@ const Navbar = () => {
               </a>
             </MagneticButton>
           ))}
+          <div className="w-px h-4 bg-border" />
+          <MagneticButton strength={0.2}>
+            <LanguageToggle />
+          </MagneticButton>
         </div>
 
         {/* Mobile */}
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center gap-4">
+          <LanguageToggle />
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <button className="text-muted-foreground hover:text-foreground transition-colors p-1">
@@ -72,7 +90,7 @@ const Navbar = () => {
               </button>
             </SheetTrigger>
             <SheetContent side="right" className="w-64 bg-background border-border">
-              <SheetTitle className="sr-only">Navigation</SheetTitle>
+              <SheetTitle className="sr-only">{t("nav.navigation")}</SheetTitle>
               <div className="flex flex-col gap-6 pt-12">
                 {links.map((link) => (
                   <a

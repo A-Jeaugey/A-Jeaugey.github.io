@@ -3,20 +3,20 @@ import { Button } from "@/components/ui/button";
 import LiquidBackground from "@/components/LiquidBackground";
 import MagneticButton from "@/components/MagneticButton";
 import { useEffect, useState, useRef } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const HeroSection = () => {
   const [loaded, setLoaded] = useState(false);
   const nameRef = useRef<HTMLHeadingElement>(null);
-  const [letters, setLetters] = useState<{ char: string; x: number; y: number }[]>([]);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
-    const t = setTimeout(() => setLoaded(true), 100);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setLoaded(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
-  // Split name into positioned letters for interactive effect
   const name = "Arthur Jeaugey";
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -58,10 +58,9 @@ const HeroSection = () => {
             }}
           >
             {name.split("").map((char, i) => {
-              // Calculate distance from mouse to this letter's approximate position
               const totalChars = name.length;
               const charFraction = i / totalChars;
-              const approxX = charFraction * 100; // percentage across
+              const approxX = charFraction * 100;
               const mouseFraction = (mousePos.x / (nameRef.current?.offsetWidth || 1)) * 100;
               const dist = Math.abs(approxX - mouseFraction);
               const influence = isHovering ? Math.max(0, 1 - dist / 25) : 0;
@@ -93,7 +92,7 @@ const HeroSection = () => {
             transition: "all 1.2s ease-out 0.3s",
           }}
         >
-          I build software, experiment with AI, and dig into complex systems.
+          {t("hero.subtitle")}
         </p>
 
         <p
@@ -104,8 +103,7 @@ const HeroSection = () => {
             transition: "all 1.2s ease-out 0.5s",
           }}
         >
-          Currently studying computer science in France. Interested in how things
-          work under the hood — from neural networks to operating systems.
+          {t("hero.description")}
         </p>
 
         <div
@@ -122,7 +120,7 @@ const HeroSection = () => {
               variant="outline"
               className="rounded-full px-6 border-foreground/20 text-foreground hover:bg-foreground/5 hover:border-foreground/40 transition-all duration-300"
             >
-              <a href="#projects">See what I've built</a>
+              <a href="#projects">{t("hero.cta")}</a>
             </Button>
           </MagneticButton>
           <MagneticButton strength={0.4}>

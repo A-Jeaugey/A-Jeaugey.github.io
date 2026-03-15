@@ -1,11 +1,12 @@
 import { useScrollFadeIn, useParallax } from "@/hooks/useScrollFadeIn";
 import { useRef, useEffect, useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const AboutSection = () => {
   const ref = useScrollFadeIn();
   const { ref: parallaxRef, offset } = useParallax(0.05);
+  const { t } = useLanguage();
 
-  // Reveal paragraphs one by one
   const [visibleP, setVisibleP] = useState([false, false, false]);
   const pContainerRef = useRef<HTMLDivElement>(null);
 
@@ -35,11 +36,7 @@ const AboutSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  const paragraphs = [
-    "I'm Arthur, a computer science student based in France. I'm drawn to the intersection of software engineering and complex systems — the kind of problems where you have to understand what's happening several layers below the surface.",
-    "Most of my time goes into building things: mobile apps, ML pipelines, tools that solve real problems. Outside of that, I explore AI infrastructure, cybersecurity, and low-level systems. I like understanding how technology works, not just how to use it.",
-    "When I'm not coding, I'm probably tuning 3D printer settings, reading about systems design, or setting up another experiment on my workstation.",
-  ];
+  const paragraphs: string[] = t("about.paragraphs");
 
   return (
     <section id="about" className="py-24 sm:py-32">
@@ -47,7 +44,7 @@ const AboutSection = () => {
         <div ref={ref} className="fade-section max-w-2xl mx-auto px-6">
           <div className="w-12 h-px bg-gradient-to-r from-transparent via-muted-foreground/30 to-transparent mb-10" />
           <h2 className="text-sm font-mono text-muted-foreground mb-8 tracking-wider uppercase">
-            About
+            {t("about.title")}
           </h2>
           <div ref={pContainerRef} className="space-y-5">
             {paragraphs.map((text, i) => (

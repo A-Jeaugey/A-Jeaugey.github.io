@@ -1,6 +1,7 @@
 import { useStaggerReveal, useParallax } from "@/hooks/useScrollFadeIn";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { X, ExternalLink, ChevronRight } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface ExperimentDetail {
   title: string;
@@ -8,6 +9,7 @@ interface ExperimentDetail {
   category: string;
   status: string;
   slug: string;
+  translationKey: string;
   report: {
     summary: string;
     highlights: string[];
@@ -19,116 +21,33 @@ interface ExperimentDetail {
   };
 }
 
-const experiments: ExperimentDetail[] = [
-  {
-    title: "Running Local LLMs on Consumer Hardware",
-    description: "Running local language models day-to-day — testing usability, responsiveness and real-world limits on my own machine.",
-    category: "AI",
-    status: "in-progress",
-    slug: "local-llms",
-    report: {
-      summary: "Less about benchmarks, more about what it actually feels like to run modern language models locally. I've been using and switching between models to understand their real-world usability: speed, responsiveness, and where they break down.",
-      highlights: [
-        "Running GLM 4.7 Flash Q4_K_M as a daily local model",
-        "Tested several models to compare output quality and responsiveness",
-        "Noticed that model usability degrades well before VRAM is fully saturated",
-        "Found that prompt length matters as much as model size for perceived speed",
-      ],
-      exploring: [
-        "How different models handle long context windows locally",
-        "The gap between local and cloud model usability in practice",
-        "Which model sizes are actually useful vs just technically runnable",
-      ],
-      tools: ["Local LLM runtimes", "GGUF / quantized models", "RTX 5080", "Ryzen 9 9950X3D"],
-    },
-  },
-  {
-    title: "GPU Memory & Quantization Notes",
-    description: "An engineering notebook on quantization: how format choices affect memory, quality and practical usability on consumer GPUs.",
-    category: "AI",
-    status: "in-progress",
-    slug: "quantization",
-    report: {
-      summary: "A running technical log rather than a finished study. I'm documenting what I observe about quantization formats, VRAM behavior and model quality as I actually use these models — not to publish results, but to build real intuition.",
-      highlights: [
-        "Compared Q4_K_M vs heavier quantizations in practice",
-        "Observed when models start spilling outside VRAM under load",
-        "Explored how context size impacts memory usage non-linearly",
-        "Documented practical limits of consumer GPUs for different model sizes",
-      ],
-      exploring: [
-        "How quantization affects usability, not just perplexity scores",
-        "The point where VRAM becomes the real bottleneck",
-        "Whether lighter quantizations are viable for real tasks",
-      ],
-      tools: ["Quantized GGUF models", "Local inference tools", "GPU monitoring tools"],
-    },
-  },
-  {
-    title: "TryHackMe — Security Learning",
-    description: "Working through hands-on labs to improve my understanding of Linux, networking, enumeration and offensive security basics.",
-    category: "Security",
-    status: "in-progress",
-    slug: "tryhackme",
-    report: {
-      summary: "I use TryHackMe as a practical way to explore cybersecurity. So far I've mainly focused on foundational content: Linux, networking, enumeration and early offensive security concepts.",
-      highlights: [
-        "Reached the top 9% on TryHackMe",
-        "Completed 59 rooms",
-        "Worked through most of the Pre Security path",
-        "Used the platform to strengthen my Linux and network basics",
-      ],
-      metrics: [
-        { label: "Rooms completed", value: "59" },
-        { label: "Global rank", value: "Top 9%" },
-      ],
-      tools: ["Linux", "Networking basics", "TryHackMe", "Enumeration tools"],
-      badgeUrl: "https://tryhackme.com/api/v2/badges/public-profile?userPublicId=3348157",
-    },
-  },
-  {
-    title: "PC Building — 4 Builds & Counting",
-    description: "Building PCs from scratch and salvaging prebuilds — choosing components, fixing incompatibilities, and learning how the hardware actually works.",
-    category: "Hardware",
-    status: "in-progress",
-    slug: "workstation",
-    report: {
-      summary: "What started as building my own machine turned into a real passion for PC hardware. I've built 4 PCs so far — from a fully custom high-end workstation to Frankenstein machines assembled from prebuild leftovers. Each one taught me something different about compatibility, trade-offs and how the hardware really works.",
-      highlights: [
-        "Built my own workstation from scratch: R9 9950X3D, RTX 5080, 64GB RAM, Samsung 9100 Pro, X870E-E — every component chosen and compared manually",
-        "Rebuilt my brother's PC from an old ASUS ROG prebuild — new motherboard and PSU to support a proper GPU upgrade",
-        "Upgraded my little brother's HP Omen: identified the performance bottlenecks and replaced only what actually mattered",
-        "Built a Frankenstein PC for my brother's girlfriend from 3 prebuilds and spare parts — manually flashed BIOS for CPU compatibility and repaired bent CPU pins",
-      ],
-      exploring: [
-        "How to identify real bottlenecks vs. marketing noise in prebuild hardware",
-        "Component compatibility edge cases that documentation doesn't cover",
-        "The gap between spec sheet numbers and actual real-world performance",
-      ],
-      tools: ["RTX 5080", "Ryzen 9 9950X3D", "X870E-E", "Samsung 9100 Pro", "BIOS flashing", "Component sourcing"],
-    },
-  },
-  {
-    title: "3D Printing & Digital Fabrication",
-    description: "Using 3D printing and laser engraving to prototype ideas, create useful objects and explore digital fabrication.",
-    category: "Hardware",
-    status: "in-progress",
-    slug: "3d-printing",
-    report: {
-      summary: "I'm interested in fabrication as a natural extension of software and systems thinking: taking an idea, prototyping it, iterating on it, and turning it into something real.",
-      highlights: [
-        "Regularly use a 3D printer for prototyping and experimentation",
-        "Also use a LaserPecker LP2 for engraving-related projects",
-        "Previously sold 2 digital 3D files on Cults",
-        "Interested in the full loop from idea to usable object",
-      ],
-      metrics: [
-        { label: "Files sold", value: "2" },
-      ],
-      tools: ["3D printer", "LaserPecker LP2", "Pinecil soldering iron", "3D modeling / slicing workflow"],
-    },
-  },
+const experimentSlugs = [
+  { slug: "local-llms", key: "localLlms", category: "AI", status: "in-progress" },
+  { slug: "quantization", key: "quantization", category: "AI", status: "in-progress" },
+  { slug: "tryhackme", key: "tryhackme", category: "Security", status: "in-progress" },
+  { slug: "workstation", key: "workstation", category: "Hardware", status: "in-progress" },
+  { slug: "3d-printing", key: "printing", category: "Hardware", status: "in-progress" },
 ];
+
+const experimentTools: Record<string, string[]> = {
+  "local-llms": ["Local LLM runtimes", "GGUF / quantized models", "RTX 5080", "Ryzen 9 9950X3D"],
+  quantization: ["Quantized GGUF models", "Local inference tools", "GPU monitoring tools"],
+  tryhackme: ["Linux", "Networking basics", "TryHackMe", "Enumeration tools"],
+  workstation: ["RTX 5080", "Ryzen 9 9950X3D", "X870E-E", "Samsung 9100 Pro", "BIOS flashing", "Component sourcing"],
+  "3d-printing": ["3D printer", "LaserPecker LP2", "Pinecil soldering iron", "3D modeling / slicing workflow"],
+};
+
+const experimentMetrics: Record<string, { label: string; value: string }[]> = {
+  tryhackme: [
+    { label: "Rooms completed", value: "59" },
+    { label: "Global rank", value: "Top 9%" },
+  ],
+  "3d-printing": [{ label: "Files sold", value: "2" }],
+};
+
+const experimentBadges: Record<string, string> = {
+  tryhackme: "https://tryhackme.com/api/v2/badges/public-profile?userPublicId=3348157",
+};
 
 const categoryColors: Record<string, string> = {
   AI: "210 60% 55%",
@@ -145,9 +64,9 @@ const categoryIcons: Record<string, string> = {
 const fileSystem: Record<string, string[] | string> = {
   "~": ["lab", "projects", ".bashrc", ".gitconfig"],
   "~/lab": ["experiments", "notes.md", "README.md"],
-  "~/lab/experiments": experiments.map((e) => e.slug),
+  "~/lab/experiments": experimentSlugs.map((e) => e.slug),
   ...Object.fromEntries(
-    experiments.map((e) => [
+    experimentSlugs.map((e) => [
       `~/lab/experiments/${e.slug}`,
       ["README.md", "results"],
     ])
@@ -158,8 +77,9 @@ const AVAILABLE_COMMANDS = ["ls", "cd", "cat", "pwd", "clear", "help", "whoami",
 const QUICK_COMMANDS = ["help", "ls", "tree", "whoami"];
 
 const LabSection = () => {
-  const { containerRef, visibleItems } = useStaggerReveal(experiments.length + 1, 120);
+  const { containerRef, visibleItems } = useStaggerReveal(experimentSlugs.length + 1, 120);
   const { ref: parallaxRef, offset } = useParallax(0.06);
+  const { t } = useLanguage();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [terminalLines, setTerminalLines] = useState<string[]>([]);
   const [selectedExperiment, setSelectedExperiment] = useState<ExperimentDetail | null>(null);
@@ -175,6 +95,27 @@ const LabSection = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const bootDone = useRef(false);
 
+  // Build experiments from translations
+  const experiments: ExperimentDetail[] = experimentSlugs.map((meta) => {
+    const tr = t(`experiment.${meta.key}`);
+    return {
+      title: tr.title,
+      description: tr.description,
+      category: meta.category,
+      status: meta.status,
+      slug: meta.slug,
+      translationKey: meta.key,
+      report: {
+        summary: tr.summary,
+        highlights: tr.highlights,
+        exploring: tr.exploring,
+        metrics: experimentMetrics[meta.slug],
+        tools: experimentTools[meta.slug],
+        badgeUrl: experimentBadges[meta.slug],
+      },
+    };
+  });
+
   const scrollTerminal = useCallback(() => {
     setTimeout(() => {
       if (terminalRef.current) {
@@ -183,7 +124,7 @@ const LabSection = () => {
     }, 10);
   }, []);
 
-  // Boot sequence — short and fast
+  // Boot sequence
   const visible0 = visibleItems[0];
   useEffect(() => {
     if (!visible0 || bootDone.current) return;
@@ -193,11 +134,11 @@ const LabSection = () => {
       "  arthur@workstation  ·  Ubuntu 22.04  ·  RTX 5080  ·  zsh 5.9",
       "",
       "$ ls ~/lab/experiments",
-      ...experiments.map(
+      ...experimentSlugs.map(
         (e) => `${e.status === "in-progress" ? "⚡" : "✓"} ${e.slug.padEnd(20)} [${categoryIcons[e.category]} ${e.category}]`
       ),
       "",
-      "Ready — type a command or click an experiment",
+      t("lab.ready"),
     ];
 
     let i = 0;
@@ -213,9 +154,9 @@ const LabSection = () => {
         setTimeout(() => inputRef.current?.focus(), 100);
       }
     }, 45);
-  }, [visible0, scrollTerminal]);
+  }, [visible0, scrollTerminal, t]);
 
-  // Autocomplete suggestion
+  // Autocomplete
   useEffect(() => {
     if (!inputValue.trim()) { setSuggestion(""); return; }
 
@@ -263,17 +204,17 @@ const LabSection = () => {
           setTerminalLines((prev) => [
             ...prev,
             "",
-            "Available commands:",
-            "  ls [path]    List directory contents",
-            "  cd <path>    Change directory  (.. to go up)",
-            "  cat <slug>   Open experiment report",
-            "  pwd          Print working directory",
-            "  tree         Show directory tree",
-            "  whoami       Current user",
-            "  date         Show date",
-            "  clear        Clear terminal",
+            t("lab.helpTitle"),
+            `  ls [path]    ${t("lab.helpLs")}`,
+            `  cd <path>    ${t("lab.helpCd")}`,
+            `  cat <slug>   ${t("lab.helpCat")}`,
+            `  pwd          ${t("lab.helpPwd")}`,
+            `  tree         ${t("lab.helpTree")}`,
+            `  whoami       ${t("lab.helpWhoami")}`,
+            `  date         ${t("lab.helpDate")}`,
+            `  clear        ${t("lab.helpClear")}`,
             "",
-            `Experiments: ${experiments.map((e) => e.slug).join(", ")}`,
+            `${t("lab.experiments")}: ${experimentSlugs.map((e) => e.slug).join(", ")}`,
             "",
           ]);
           break;
@@ -298,8 +239,8 @@ const LabSection = () => {
           setTerminalLines((prev) => [
             ...prev,
             "~/lab/experiments",
-            ...experiments.flatMap((e, i) => {
-              const isLast = i === experiments.length - 1;
+            ...experimentSlugs.flatMap((e, i) => {
+              const isLast = i === experimentSlugs.length - 1;
               return [
                 `${isLast ? "└──" : "├──"} ${e.slug}/`,
                 `${isLast ? "   " : "│  "} ├── README.md`,
@@ -307,7 +248,7 @@ const LabSection = () => {
               ];
             }),
             "",
-            `${experiments.length} experiments`,
+            `${experimentSlugs.length} ${t("lab.experiments_count")}`,
           ]);
           break;
         }
@@ -359,7 +300,7 @@ const LabSection = () => {
               `  ${exp.title}`,
               `  [${exp.category}] — ${exp.status}`,
               `  ${exp.report.summary.slice(0, 80)}...`,
-              `  → Opening report...`,
+              `  → ${t("lab.openingReport")}`,
               "",
             ]);
             setTimeout(() => {
@@ -369,8 +310,8 @@ const LabSection = () => {
           } else {
             setTerminalLines((prev) => [
               ...prev,
-              `cat: ${args || "(no file)"}: No such file`,
-              `Available: ${experiments.map((e) => e.slug).join(", ")}`,
+              `cat: ${args || "(no file)"}: ${t("lab.noSuchFile")}`,
+              `${t("lab.available")}: ${experimentSlugs.map((e) => e.slug).join(", ")}`,
             ]);
           }
           break;
@@ -378,15 +319,15 @@ const LabSection = () => {
         default: {
           setTerminalLines((prev) => [
             ...prev,
-            `zsh: command not found: ${command}`,
-            `Type 'help' for available commands`,
+            `zsh: ${t("lab.commandNotFound")}: ${command}`,
+            t("lab.typeHelp"),
           ]);
         }
       }
 
       scrollTerminal();
     },
-    [currentDir, scrollTerminal]
+    [currentDir, scrollTerminal, experiments, t]
   );
 
   const handleKeyDown = useCallback(
@@ -429,7 +370,6 @@ const LabSection = () => {
     [inputValue, suggestion, executeCommand, commandHistory, historyIndex]
   );
 
-  // Card click → direct execution
   const handleCardClick = useCallback(
     (exp: ExperimentDetail) => {
       executeCommand(`cat ${exp.slug}`);
@@ -496,11 +436,11 @@ const LabSection = () => {
               <span className="font-mono text-xs text-muted-foreground/50">~/lab</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">Lab</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">{t("lab.title")}</h2>
             <p className="text-muted-foreground text-sm max-w-md">
-              Where I explore systems, break things, and document what I learn.{" "}
+              {t("lab.description")}{" "}
               <span className="text-muted-foreground/40">
-                Click a card or type in the terminal to explore.
+                {t("lab.descriptionHint")}
               </span>
             </p>
           </div>
@@ -553,11 +493,13 @@ const LabSection = () => {
                         : line.startsWith("DIR:")
                         ? ""
                         : line.includes("command not found") ||
+                          line.includes("commande introuvable") ||
                           line.includes("No such file") ||
+                          line.includes("Fichier introuvable") ||
                           line.includes("cannot access") ||
                           line.includes("no such dir")
                         ? ""
-                        : line.startsWith("Available")
+                        : line.startsWith("Available") || line.startsWith("Disponibles")
                         ? "text-muted-foreground/40 italic"
                         : line.startsWith("  ") && !line.startsWith("  →")
                         ? "text-muted-foreground/50"
@@ -576,7 +518,9 @@ const LabSection = () => {
                       line.startsWith("DIR:")
                         ? { color: "hsl(210 60% 65%)" }
                         : line.includes("command not found") ||
+                          line.includes("commande introuvable") ||
                           line.includes("No such file") ||
+                          line.includes("Fichier introuvable") ||
                           line.includes("cannot access") ||
                           line.includes("no such dir")
                         ? { color: "hsl(0 60% 60%)" }
@@ -610,7 +554,7 @@ const LabSection = () => {
                 )}
               </div>
 
-              {/* Input bar — always visible */}
+              {/* Input bar */}
               <div className="border-t border-border px-4 py-2.5 flex items-center gap-2 flex-shrink-0 bg-card/50">
                 <span
                   className="font-mono text-[11px] flex-shrink-0"
@@ -685,7 +629,7 @@ const LabSection = () => {
 
                 return (
                   <div
-                    key={exp.title}
+                    key={exp.slug}
                     onMouseEnter={() => setActiveIndex(i)}
                     onMouseLeave={() => setActiveIndex(null)}
                     onClick={() => handleCardClick(exp)}
@@ -737,7 +681,6 @@ const LabSection = () => {
                       </div>
 
                       <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                        {/* Terminal hint on hover */}
                         <span
                           className="font-mono text-[9px] text-muted-foreground/0 group-hover:text-muted-foreground/35 transition-all duration-200"
                         >
@@ -752,8 +695,8 @@ const LabSection = () => {
 
               {/* Helper note */}
               <p className="text-[11px] text-muted-foreground/25 font-mono pt-1 pl-1">
-                › clicking a card runs{" "}
-                <span className="text-muted-foreground/40">cat &lt;experiment&gt;</span> in the terminal
+                › {t("lab.cardHint")}{" "}
+                <span className="text-muted-foreground/40">cat &lt;experiment&gt;</span> {t("lab.inTerminal")}
               </p>
             </div>
           </div>
@@ -798,7 +741,7 @@ const LabSection = () => {
                         color: `hsl(${categoryColors[selectedExperiment.category]} / 0.7)`,
                       }}
                     >
-                      · Active
+                      · {t("lab.active")}
                     </span>
                   )}
                 </div>
@@ -838,7 +781,7 @@ const LabSection = () => {
 
               <div>
                 <h4 className="font-mono text-[11px] text-muted-foreground/50 uppercase tracking-widest mb-3">
-                  Key Findings
+                  {t("lab.keyFindings")}
                 </h4>
                 <div className="space-y-2">
                   {selectedExperiment.report.highlights.map((h, i) => (
@@ -860,7 +803,7 @@ const LabSection = () => {
               {selectedExperiment.report.exploring && (
                 <div>
                   <h4 className="font-mono text-[11px] text-muted-foreground/50 uppercase tracking-widest mb-3">
-                    What I'm exploring
+                    {t("lab.exploring")}
                   </h4>
                   <div className="space-y-2">
                     {selectedExperiment.report.exploring.map((item, i) => (
@@ -879,7 +822,7 @@ const LabSection = () => {
 
               <div>
                 <h4 className="font-mono text-[11px] text-muted-foreground/50 uppercase tracking-widest mb-3">
-                  Stack
+                  {t("lab.stack")}
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedExperiment.report.tools.map((tool) => (
@@ -927,8 +870,8 @@ const LabSection = () => {
             <div className="px-6 py-3 border-t border-border bg-secondary/20">
               <span className="font-mono text-[10px] text-muted-foreground/30">
                 experiments/{selectedExperiment.slug}/README.md —{" "}
-                {selectedExperiment.report.highlights.length} findings ·{" "}
-                {selectedExperiment.report.tools.length} tools
+                {selectedExperiment.report.highlights.length} {t("lab.findings")} ·{" "}
+                {selectedExperiment.report.tools.length} {t("lab.tools")}
               </span>
             </div>
           </div>
