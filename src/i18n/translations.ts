@@ -9,8 +9,8 @@ const translations = {
       navigation: "Navigation",
     },
     hero: {
-      subtitle: "My first instinct when something works is to figure out why. My second is to see if I can break it.",
-      description: "Terminale · maths · NSI · France",
+      subtitle: "Developer, tinkerer, pentester, PC builder, LLM wrangler. Currently building things that probably don't need to exist yet.",
+      description: "Terminale maths/NSI · France",
       cta: "See what I've built",
     },
     projects: {
@@ -168,8 +168,8 @@ const translations = {
       navigation: "Navigation",
     },
     hero: {
-      subtitle: "Mon premier réflexe devant un truc qui marche, c'est de regarder pourquoi. Mon deuxième, c'est de voir si je peux le casser.",
-      description: "Terminale · maths · NSI · France",
+      subtitle: "Développeur, bidouilleur, pentesteur, monteur de PC, dresseur de LLMs. Passe plus de temps à essayer de comprendre les choses qu'à les utiliser.",
+      description: "Terminale maths/NSI · France",
       cta: "Voir mes projets",
     },
     projects: {
