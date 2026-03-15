@@ -9,9 +9,8 @@ const translations = {
       navigation: "Navigation",
     },
     hero: {
-      subtitle: "I build software, experiment with AI, and dig into complex systems.",
-      description:
-        "Currently studying computer science in France. Interested in how things work under the hood — from neural networks to operating systems.",
+      subtitle: "My first instinct when something works is to figure out why. My second is to see if I can break it.",
+      description: "Terminale · maths · NSI · France",
       cta: "See what I've built",
     },
     projects: {
@@ -169,10 +168,8 @@ const translations = {
       navigation: "Navigation",
     },
     hero: {
-      subtitle:
-        "Je développe des logiciels, j'expérimente avec l'IA et j'explore des systèmes complexes.",
-      description:
-        "Étudiant en informatique en France. Intéressé par le fonctionnement en profondeur des technologies — des réseaux de neurones aux systèmes d'exploitation.",
+      subtitle: "Mon premier réflexe devant un truc qui marche, c'est de regarder pourquoi. Mon deuxième, c'est de voir si je peux le casser.",
+      description: "Terminale · maths · NSI · France",
       cta: "Voir mes projets",
     },
     projects: {
