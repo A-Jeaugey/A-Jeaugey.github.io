@@ -102,9 +102,8 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
 
       ctx.clearRect(0, 0, w, h);
 
-      // Smooth mouse — frame-rate independent interpolation
-      // 1 - (1 - 0.035)^(dt) ≈ exponential decay scaled by time
-      const mouseSmooth = 1 - Math.pow(0.965, dt);
+      // Smooth mouse — frame-rate independent, snappy tracking
+      const mouseSmooth = 1 - Math.pow(0.85, dt);
       smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * mouseSmooth;
       smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * mouseSmooth;
 
@@ -139,9 +138,9 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
         while (diff < -Math.PI) diff += Math.PI * 2;
 
         // Frame-rate independent spring physics
-        const force = diff * 0.018 * dt;
+        const force = diff * 0.045 * dt;
         stick.velocity = stick.velocity * damping + force;
-        const maxVel = 0.028 * dt;
+        const maxVel = 0.06 * dt;
         stick.velocity = Math.max(-maxVel, Math.min(maxVel, stick.velocity));
         stick.angle += stick.velocity;
 
