@@ -33,6 +33,7 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
   const smoothMouseRef = useRef({ x: -1000, y: -1000 });
   const sticksRef = useRef<Stick[]>([]);
   const animRef = useRef<number>(0);
+  const lastTimeRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -92,24 +93,38 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
     container.addEventListener("mouseleave", handleMouseLeave);
     window.addEventListener("resize", resize);
 
-    const animate = () => {
+    const MOUSE_RADIUS_SQ = MOUSE_RADIUS * MOUSE_RADIUS;
+
+    const animate = (now: number) => {
+      // Delta-time: normalize all physics to 60fps equivalent
+      const dt = lastTimeRef.current ? Math.min((now - lastTimeRef.current) / 16.667, 3) : 1;
+      lastTimeRef.current = now;
+
       ctx.clearRect(0, 0, w, h);
 
-      // Smooth mouse — heavy viscous feel
-      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * 0.035;
-      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * 0.035;
+      // Smooth mouse — frame-rate independent interpolation
+      // 1 - (1 - 0.035)^(dt) ≈ exponential decay scaled by time
+      const mouseSmooth = 1 - Math.pow(0.965, dt);
+      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * mouseSmooth;
+      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * mouseSmooth;
 
       const mx = smoothMouseRef.current.x;
       const my = smoothMouseRef.current.y;
 
+      const MAX_ANGLE = Math.PI * 0.35;
+      const damping = Math.pow(0.9, dt);
+
+      // Batch path operations
+      ctx.lineCap = "round";
+
       sticksRef.current.forEach((stick) => {
         const dx = mx - stick.x;
         const dy = my - stick.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        // Use squared distance for radius check (skip sqrt when possible)
+        const distSq = dx * dx + dy * dy;
 
-        const MAX_ANGLE = Math.PI * 0.35;
-
-        if (dist < MOUSE_RADIUS && dist > 15) {
+        if (distSq < MOUSE_RADIUS_SQ && distSq > 225) {
+          const dist = Math.sqrt(distSq);
           const angleToMouse = Math.atan2(dx, -dy);
           const influence = Math.pow(1 - dist / MOUSE_RADIUS, 2) * GRAVITY_STRENGTH;
           const raw = angleToMouse * influence;
@@ -123,18 +138,23 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
         while (diff > Math.PI) diff -= Math.PI * 2;
         while (diff < -Math.PI) diff += Math.PI * 2;
 
-        const force = diff * 0.018;
-        stick.velocity = stick.velocity * 0.9 + force;
-        stick.velocity = Math.max(-0.028, Math.min(0.028, stick.velocity));
+        // Frame-rate independent spring physics
+        const force = diff * 0.018 * dt;
+        stick.velocity = stick.velocity * damping + force;
+        const maxVel = 0.028 * dt;
+        stick.velocity = Math.max(-maxVel, Math.min(maxVel, stick.velocity));
         stick.angle += stick.velocity;
 
         const halfH = STICK_HEIGHT / 2;
-        const topX = stick.x + Math.sin(stick.angle) * halfH;
-        const topY = stick.y - Math.cos(stick.angle) * halfH;
-        const botX = stick.x - Math.sin(stick.angle) * halfH;
-        const botY = stick.y + Math.cos(stick.angle) * halfH;
+        const sinA = Math.sin(stick.angle);
+        const cosA = Math.cos(stick.angle);
+        const topX = stick.x + sinA * halfH;
+        const topY = stick.y - cosA * halfH;
+        const botX = stick.x - sinA * halfH;
+        const botY = stick.y + cosA * halfH;
 
-        // Proximity factor for color shift
+        // Proximity factor for color shift (use distSq to avoid sqrt for far sticks)
+        const dist = distSq < MOUSE_RADIUS_SQ ? Math.sqrt(distSq) : MOUSE_RADIUS;
         const proximity = Math.max(0, 1 - dist / MOUSE_RADIUS);
 
         // Chrome/oxidized iridescent color
@@ -145,7 +165,6 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
         ctx.lineTo(botX, botY);
         ctx.strokeStyle = color;
         ctx.lineWidth = STICK_WIDTH + proximity * 1;
-        ctx.lineCap = "round";
         ctx.stroke();
 
         // Subtle glow layer for sticks near mouse
@@ -155,7 +174,6 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
           ctx.lineTo(botX, botY);
           ctx.strokeStyle = getChromaColor(stick.angle, proximity * 0.4);
           ctx.lineWidth = STICK_WIDTH + proximity * 4;
-          ctx.lineCap = "round";
           ctx.stroke();
         }
       });
