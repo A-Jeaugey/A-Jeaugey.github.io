@@ -9,7 +9,7 @@ const translations = {
       navigation: "Navigation",
     },
     hero: {
-      subtitle: "Developer, tinkerer, pentester, PC builder, LLM wrangler. Currently building things that probably don't need to exist yet.",
+      subtitle: "Developer, tinkerer, pentester, PC builder, LLM wrangler... Currently building things that probably don't need to exist yet.",
       description: "Terminale maths/NSI · France",
       cta: "See what I've built",
     },
@@ -168,7 +168,7 @@ const translations = {
       navigation: "Navigation",
     },
     hero: {
-      subtitle: "Développeur, bidouilleur, pentesteur, monteur de PC, dresseur de LLMs. Passe plus de temps à essayer de comprendre les choses qu'à les utiliser.",
+      subtitle: "Développeur, bidouilleur, pentesteur, monteur de PC, dresseur de LLMs... Passe plus de temps à essayer de comprendre les choses qu'à les utiliser.",
       description: "Terminale maths/NSI · France",
       cta: "Voir mes projets",
     },
