@@ -3,8 +3,8 @@ import { useStaggerReveal } from "@/hooks/useScrollFadeIn";
 
 const contacts = [
   { icon: Github, label: "GitHub", href: "https://github.com/A-Jeaugey" },
-  { icon: Mail, label: "Email", href: "mailto:arthur@example.com" },
-  { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com" },
+  { icon: Mail, label: "Email", href: "mailto:jeaugeyarthur@gmail.com" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/arthur-jeaugey/" },
 ];
 
 const ContactSection = () => {
