@@ -131,7 +131,7 @@ const HeroSection = () => {
               className="rounded-full text-muted-foreground hover:text-foreground"
             >
               <a
-                href="https://github.com"
+                href="https://github.com/A-Jeaugey"
                 target="_blank"
                 rel="noopener noreferrer"
               >

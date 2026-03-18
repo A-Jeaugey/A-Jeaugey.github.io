@@ -8,7 +8,7 @@ const techStacks = [
   ["Python", "scikit-learn", "XGBoost", "Pandas"],
 ];
 
-const links = ["https://github.com", "https://github.com", "https://github.com"];
+const links = ["https://github.com/A-Jeaugey", "https://github.com/A-Jeaugey/PI-THON", "https://github.com/A-Jeaugey/bias-corrector-weather"];
 
 const ProjectsSection = () => {
   const { containerRef, visibleItems } = useStaggerReveal(techStacks.length + 1, 150);

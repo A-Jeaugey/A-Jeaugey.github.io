@@ -2,7 +2,7 @@ import { Github, Mail, Linkedin } from "lucide-react";
 import { useStaggerReveal } from "@/hooks/useScrollFadeIn";
 
 const contacts = [
-  { icon: Github, label: "GitHub", href: "https://github.com" },
+  { icon: Github, label: "GitHub", href: "https://github.com/A-Jeaugey" },
   { icon: Mail, label: "Email", href: "mailto:arthur@example.com" },
   { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com" },
 ];
