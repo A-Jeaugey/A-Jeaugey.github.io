@@ -2,7 +2,7 @@ import { Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LiquidBackground from "@/components/LiquidBackground";
 import MagneticButton from "@/components/MagneticButton";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const HeroSection = () => {
@@ -10,12 +10,26 @@ const HeroSection = () => {
   const nameRef = useRef<HTMLHeadingElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [bgOpacity, setBgOpacity] = useState(1);
   const { t } = useLanguage();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 100);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleScroll = useCallback(() => {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    // Fade from 1 to 0.15 over the first viewport height
+    const opacity = Math.max(0.15, 1 - (scrollY / vh) * 0.85);
+    setBgOpacity(opacity);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   const name = "Arthur Jeaugey";
 
@@ -31,9 +45,24 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <LiquidBackground />
+      <div style={{ opacity: bgOpacity, transition: "opacity 0.1s ease-out" }}>
+        <LiquidBackground />
+      </div>
 
       <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
+        {/* Focal halo behind title block */}
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+          style={{
+            width: "700px",
+            height: "400px",
+            background: "radial-gradient(ellipse at center, rgba(59, 130, 246, 0.08) 0%, transparent 70%)",
+            filter: "blur(60px)",
+            opacity: loaded ? 0.8 : 0,
+            transition: "opacity 2s ease-out",
+          }}
+        />
+
         {/* Name with glow + interactive letters */}
         <div className="relative inline-block">
           {/* Glow layer */}
@@ -118,7 +147,7 @@ const HeroSection = () => {
             <Button
               asChild
               variant="outline"
-              className="rounded-full px-6 border-foreground/20 text-foreground hover:bg-foreground/5 hover:border-foreground/40 transition-all duration-300"
+              className="rounded-full px-6 border-foreground/20 text-foreground hover:bg-foreground/5 hover:border-foreground/40 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,255,255,0.06)] transition-all duration-300 ease-out"
             >
               <a href="#projects">{t("hero.cta")}</a>
             </Button>

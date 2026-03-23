@@ -153,6 +153,10 @@ const translations = {
         "Most of my time goes into building things: mobile apps, ML pipelines, tools that solve real problems. Outside of that, I explore AI infrastructure, cybersecurity, and low-level systems. I like understanding how technology works, not just how to use it.",
         "When I'm not coding, I'm probably tuning 3D printer settings, reading about systems design, or setting up another experiment on my workstation.",
       ],
+      stats: ["Terminale Maths/NSI", "Top 9% TryHackMe", "4+ PC builds", "10+ ISU users"],
+    },
+    contact: {
+      tagline: "Want to chat? I'm open to opportunities and interesting projects.",
     },
     notFound: {
       title: "404",
@@ -313,6 +317,10 @@ const translations = {
         "La plupart de mon temps est consacré à construire des choses : applications mobiles, pipelines ML, outils qui résolvent de vrais problèmes. En dehors de ça, j'explore l'infrastructure IA, la cybersécurité et les systèmes bas niveau. J'aime comprendre comment la technologie fonctionne, pas juste comment l'utiliser.",
         "Quand je ne code pas, je suis probablement en train de régler les paramètres de mon imprimante 3D, de lire sur le design de systèmes, ou de monter une nouvelle expérience sur mon poste de travail.",
       ],
+      stats: ["Terminale Maths/NSI", "Top 9% TryHackMe", "4+ PC builds", "10+ utilisateurs ISU"],
+    },
+    contact: {
+      tagline: "Envie de discuter ? Je suis ouvert aux opportunités et aux projets intéressants.",
     },
     notFound: {
       title: "404",

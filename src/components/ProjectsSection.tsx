@@ -25,7 +25,7 @@ const ProjectsSection = () => {
   }));
 
   return (
-    <section id="projects" className="py-24 sm:py-32">
+    <section id="projects" className="py-28 sm:py-32">
       <div ref={parallaxRef} className="max-w-5xl mx-auto px-6" style={{ transform: `translateY(${offset}px)` }}>
         <div ref={containerRef}>
           <div

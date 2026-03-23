@@ -16,18 +16,20 @@ const ProjectCard = ({ title, description, techStack, link, visible = true, inde
   return (
     <div
       ref={ref}
-      className="group relative rounded-xl border border-border bg-card p-6 transition-all duration-500 ease-out hover:border-foreground/15"
+      className="group relative rounded-xl border border-white/[0.06] bg-card p-6 transition-all duration-300 ease-out hover:border-white/[0.12] hover:-translate-y-1"
       style={{
         transform: visible ? transform : "perspective(600px) translateY(40px) scale(0.95)",
         opacity: visible ? 1 : 0,
-        transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
+        transition: "opacity 0.6s ease-out, transform 0.6s ease-out, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease",
         willChange: "transform, opacity",
       }}
     >
-      {/* Hover glow */}
-      <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{ boxShadow: "0 0 50px -12px hsla(210, 40%, 60%, 0.15), inset 0 1px 0 hsla(210, 40%, 80%, 0.06)" }}
+      {/* Hover glow + shadow */}
+      <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.4), 0 0 50px -12px hsla(210, 40%, 60%, 0.15), inset 0 1px 0 hsla(210, 40%, 80%, 0.06)" }}
       />
+      {/* Subtle bg lighten on hover */}
+      <div className="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/[0.02] transition-colors duration-300 pointer-events-none" />
 
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-3">
@@ -52,7 +54,7 @@ const ProjectCard = ({ title, description, techStack, link, visible = true, inde
           {techStack.map((tech) => (
             <span
               key={tech}
-              className="font-mono text-xs text-muted-foreground/70 bg-secondary px-2.5 py-1 rounded-md transition-colors duration-300 group-hover:text-muted-foreground group-hover:bg-secondary/80"
+              className="font-mono text-xs text-muted-foreground/70 bg-white/[0.06] px-2.5 py-1 rounded-md transition-colors duration-300 group-hover:text-muted-foreground group-hover:bg-white/[0.08]"
             >
               {tech}
             </span>
