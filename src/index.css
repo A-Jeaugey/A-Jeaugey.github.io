@@ -195,3 +195,95 @@
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Featured project card */
+@keyframes featured-border-rotate {
+  0% { --featured-angle: 0deg; }
+  100% { --featured-angle: 360deg; }
+}
+
+@property --featured-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.featured-gradient-border {
+  background: conic-gradient(
+    from var(--featured-angle),
+    hsl(250 50% 50% / 0.3),
+    hsl(200 60% 50% / 0.15),
+    hsl(280 50% 45% / 0.05),
+    hsl(220 40% 50% / 0.15),
+    hsl(250 50% 50% / 0.3)
+  );
+  animation: featured-border-rotate 8s linear infinite;
+}
+
+.featured-card-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 1rem;
+  background: conic-gradient(
+    from var(--featured-angle),
+    hsl(250 50% 50% / 0.12),
+    hsl(200 60% 50% / 0.06),
+    transparent,
+    hsl(220 40% 50% / 0.06),
+    hsl(250 50% 50% / 0.12)
+  );
+  animation: featured-border-rotate 8s linear infinite;
+  filter: blur(16px);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.featured-card-glow:hover::before {
+  opacity: 1;
+}
+
+/* Phone screen gradient */
+@keyframes phone-screen-shift {
+  0%, 100% { background-position: 0% 0%; }
+  25% { background-position: 100% 50%; }
+  50% { background-position: 50% 100%; }
+  75% { background-position: 0% 50%; }
+}
+
+.phone-screen-gradient {
+  background: linear-gradient(
+    145deg,
+    hsl(250 40% 8%) 0%,
+    hsl(230 30% 10%) 30%,
+    hsl(260 35% 9%) 60%,
+    hsl(220 30% 7%) 100%
+  );
+  background-size: 200% 200%;
+  animation: phone-screen-shift 10s ease-in-out infinite;
+}
+
+/* Card shimmer inside phone */
+@keyframes card-shimmer {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.phone-card-shimmer {
+  animation: card-shimmer 4s ease-in-out infinite;
+}
+
+/* Phone home screen wallpapers */
+.phone-home-bg {
+  background: radial-gradient(ellipse at 30% 20%, hsl(250 40% 14%) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 80%, hsl(200 40% 10%) 0%, transparent 60%),
+              hsl(240, 8%, 7%);
+}
+
+.phone-home-bg-light {
+  background: radial-gradient(ellipse at 30% 20%, hsl(210 60% 85%) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 80%, hsl(250 50% 88%) 0%, transparent 60%),
+              hsl(220, 20%, 94%);
+}

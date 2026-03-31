@@ -1,26 +1,29 @@
 import ProjectCard from "./ProjectCard";
+import FeaturedProjectCard from "./FeaturedProjectCard";
 import { useStaggerReveal, useParallax } from "@/hooks/useScrollFadeIn";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const techStacks = [
-  ["React Native", "TypeScript", "LLM APIs", "Node.js"],
+  ["Flutter", "Dart", "FastAPI", "Gemini", "Supabase", "pgvector"],
   ["Python", "Matplotlib", "NumPy"],
   ["Python", "scikit-learn", "XGBoost", "Pandas"],
 ];
 
-const links = ["https://app.isu.gg", "https://github.com/A-Jeaugey/PI-THON", "https://github.com/A-Jeaugey/bias-corrector-weather"];
+const links = ["https://github.com/A-Jeaugey/PI-THON", "https://github.com/A-Jeaugey/bias-corrector-weather"];
 
 const ProjectsSection = () => {
-  const { containerRef, visibleItems } = useStaggerReveal(techStacks.length + 1, 150);
+  // +1 for heading, +1 for featured card, +2 for regular projects = 4
+  const { containerRef, visibleItems } = useStaggerReveal(4, 150);
   const { ref: parallaxRef, offset } = useParallax(0.08);
   const { t } = useLanguage();
 
   const items: { title: string; description: string }[] = t("projects.items");
+  const featured = t("projects.featured") as { title: string; description: string };
 
-  const projects = items.map((item, i) => ({
+  const otherProjects = items.map((item, i) => ({
     title: item.title,
     description: item.description,
-    techStack: techStacks[i],
+    techStack: techStacks[i + 1],
     link: links[i],
   }));
 
@@ -40,9 +43,21 @@ const ProjectsSection = () => {
               {t("projects.description")}
             </p>
           </div>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, i) => (
-              <ProjectCard key={project.title} {...project} visible={visibleItems[i + 1]} index={i} />
+
+          {/* Featured: ISU */}
+          <FeaturedProjectCard
+            title={featured.title}
+            description={featured.description}
+            techStack={techStacks[0]}
+            appLink="https://app.isu.gg"
+            playStoreLink="https://play.google.com/store/apps/details?id=com.isu.gg"
+            visible={visibleItems[1]}
+          />
+
+          {/* Other projects */}
+          <div className="grid gap-5 md:grid-cols-2">
+            {otherProjects.map((project, i) => (
+              <ProjectCard key={project.title} {...project} visible={visibleItems[i + 2]} index={i} />
             ))}
           </div>
         </div>

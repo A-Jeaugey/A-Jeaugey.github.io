@@ -16,12 +16,21 @@ const translations = {
     projects: {
       title: "Projects",
       description: "Things I've built — apps, tools, and experiments.",
+      featured: {
+        title: "ISU",
+        description:
+          "An AI-powered learning platform that turns handwritten notes into structured courses, quizzes and flashcards. Snap a photo of your notes and Gemini digitizes them with LaTeX support — then generates summaries, MCQs and study materials. Features a RAG chatbot that understands your courses, social learning with friends and groups, offline-first sync, and spaced repetition with score degradation.",
+        badge: "New",
+        playStore: "Available on Google Play",
+        visitApp: "Open web app",
+        features: [
+          { label: "OCR + AI", detail: "Photo to notes" },
+          { label: "RAG Chat", detail: "Ask your courses" },
+          { label: "Social", detail: "Friends & groups" },
+          { label: "Offline", detail: "Sync anywhere" },
+        ],
+      },
       items: [
-        {
-          title: "ISU",
-          description:
-            "A mobile app that uses AI to generate study materials from course content. Built with React Native, integrating LLM APIs for summarization and quiz generation.",
-        },
         {
           title: "π-thon",
           description:
@@ -153,7 +162,7 @@ const translations = {
         "Most of my time goes into building things: mobile apps, ML pipelines, tools that solve real problems. Outside of that, I explore AI infrastructure, cybersecurity, and low-level systems. I like understanding how technology works, not just how to use it.",
         "When I'm not coding, I'm probably tuning 3D printer settings, reading about systems design, or setting up another experiment on my workstation.",
       ],
-      stats: ["Terminale Maths/NSI", "Top 9% TryHackMe", "4+ PC builds", "10+ ISU users"],
+      stats: ["Terminale Maths/NSI", "Top 9% TryHackMe", "4+ PC builds", "ISU on Play Store"],
     },
     contact: {
       tagline: "Want to chat? I'm open to opportunities and interesting projects.",
@@ -179,12 +188,21 @@ const translations = {
     projects: {
       title: "Projets",
       description: "Ce que j'ai construit — applis, outils et expériences.",
+      featured: {
+        title: "ISU",
+        description:
+          "Une plateforme d'apprentissage augmentée par l'IA qui transforme vos notes manuscrites en cours structurés, quiz et flashcards. Prenez une photo de vos notes et Gemini les numérise avec support LaTeX — puis génère résumés, QCM et supports de révision. Inclut un chatbot RAG qui comprend vos cours, l'apprentissage social avec amis et groupes, la synchronisation offline-first, et la répétition espacée avec dégradation des scores.",
+        badge: "Nouveau",
+        playStore: "Disponible sur Google Play",
+        visitApp: "Ouvrir l'appli web",
+        features: [
+          { label: "OCR + IA", detail: "Photo vers notes" },
+          { label: "Chat RAG", detail: "Interroge tes cours" },
+          { label: "Social", detail: "Amis et groupes" },
+          { label: "Hors-ligne", detail: "Sync partout" },
+        ],
+      },
       items: [
-        {
-          title: "ISU",
-          description:
-            "Une application mobile qui utilise l'IA pour générer des supports de révision à partir de cours. Développée en React Native, avec des APIs de LLM pour le résumé et la génération de quiz.",
-        },
         {
           title: "π-thon",
           description:
@@ -317,7 +335,7 @@ const translations = {
         "La plupart de mon temps est consacré à construire des choses : applications mobiles, pipelines ML, outils qui résolvent de vrais problèmes. En dehors de ça, j'explore l'infrastructure IA, la cybersécurité et les systèmes bas niveau. J'aime comprendre comment la technologie fonctionne, pas juste comment l'utiliser.",
         "Quand je ne code pas, je suis probablement en train de régler les paramètres de mon imprimante 3D, de lire sur le design de systèmes, ou de monter une nouvelle expérience sur mon poste de travail.",
       ],
-      stats: ["Terminale Maths/NSI", "Top 9% TryHackMe", "4+ PC builds", "10+ utilisateurs ISU"],
+      stats: ["Terminale Maths/NSI", "Top 9% TryHackMe", "4+ PC builds", "ISU sur le Play Store"],
     },
     contact: {
       tagline: "Envie de discuter ? Je suis ouvert aux opportunités et aux projets intéressants.",
