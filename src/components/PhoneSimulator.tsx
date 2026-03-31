@@ -209,8 +209,13 @@ const ISUScreen = ({ onBack, dark }: { onBack: () => void; dark: boolean }) => {
           )}
           <iframe
             src="https://app.isu.gg"
-            className="w-full h-full border-0"
-            style={{ opacity: iframeLoaded ? 1 : 0 }}
+            className="border-0 origin-top-left"
+            style={{
+              width: "390px",
+              height: "844px",
+              transform: "scale(0.49)",
+              opacity: iframeLoaded ? 1 : 0,
+            }}
             onLoad={handleLoad}
             onError={() => setIframeFailed(true)}
             allow="clipboard-write"
