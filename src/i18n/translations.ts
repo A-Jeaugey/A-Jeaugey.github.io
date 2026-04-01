@@ -32,6 +32,12 @@ const translations = {
       },
       items: [
         {
+          title: "Emergency Crew",
+          description:
+            "A multiplayer co-op game (3–6 players) in 2D isometric view. Repair a failing space station together while competing to become Employee of the Month. Features cascading system failures, a combat system, and escalating phases.",
+          badge: "In development",
+        },
+        {
           title: "π-thon",
           description:
             "A Python application that visualizes different mathematical methods for estimating π — Monte Carlo, Leibniz series, Buffon's needle — and compares their convergence rates.",
@@ -203,6 +209,12 @@ const translations = {
         ],
       },
       items: [
+        {
+          title: "Emergency Crew",
+          description:
+            "Un jeu multijoueur coopératif (3–6 joueurs) en vue isométrique 2D. Réparez une station spatiale défaillante ensemble tout en rivalisant pour devenir l'Employé du Mois. Pannes en cascade, système de combat et phases d'escalade.",
+          badge: "En développement",
+        },
         {
           title: "π-thon",
           description:

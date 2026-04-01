@@ -5,19 +5,26 @@ import { useLanguage } from "@/i18n/LanguageContext";
 
 const techStacks = [
   ["Flutter", "Dart", "FastAPI", "Gemini", "Supabase", "pgvector"],
+  ["Colyseus", "Phaser 3", "Node.js", "TypeScript"],
   ["Python", "Matplotlib", "NumPy"],
   ["Python", "scikit-learn", "XGBoost", "Pandas"],
 ];
 
-const links = ["https://github.com/A-Jeaugey/PI-THON", "https://github.com/A-Jeaugey/bias-corrector-weather"];
+const links = [
+  "https://github.com/S-Mopty/Emergency-Crew",
+  "https://github.com/A-Jeaugey/PI-THON",
+  "https://github.com/A-Jeaugey/bias-corrector-weather",
+];
+
+const WIP_COLOR = "#f59e0b";
 
 const ProjectsSection = () => {
-  // +1 for heading, +1 for featured card, +2 for regular projects = 4
-  const { containerRef, visibleItems } = useStaggerReveal(4, 150);
+  // +1 for heading, +1 for featured card, +3 for regular projects = 5
+  const { containerRef, visibleItems } = useStaggerReveal(5, 150);
   const { ref: parallaxRef, offset } = useParallax(0.08);
   const { t } = useLanguage();
 
-  const items: { title: string; description: string }[] = t("projects.items");
+  const items: { title: string; description: string; badge?: string }[] = t("projects.items");
   const featured = t("projects.featured") as { title: string; description: string };
 
   const otherProjects = items.map((item, i) => ({
@@ -25,6 +32,8 @@ const ProjectsSection = () => {
     description: item.description,
     techStack: techStacks[i + 1],
     link: links[i],
+    badge: item.badge,
+    badgeColor: item.badge ? WIP_COLOR : undefined,
   }));
 
   return (
@@ -55,7 +64,7 @@ const ProjectsSection = () => {
           />
 
           {/* Other projects */}
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {otherProjects.map((project, i) => (
               <ProjectCard key={project.title} {...project} visible={visibleItems[i + 2]} index={i} />
             ))}
