@@ -5,7 +5,7 @@ import { useLanguage } from "@/i18n/LanguageContext";
 
 const techStacks = [
   ["Flutter", "Dart", "FastAPI", "Gemini", "Supabase", "pgvector"],
-  ["Colyseus", "Phaser 3", "Node.js", "TypeScript"],
+  ["Colyseus", "Phaser 3", "Node.js", "JavaScript"],
   ["Python", "Matplotlib", "NumPy"],
   ["Python", "scikit-learn", "XGBoost", "Pandas"],
 ];
