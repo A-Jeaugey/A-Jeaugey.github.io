@@ -88,11 +88,9 @@ const HeroSection = () => {
               letterSpacing: loaded ? "-0.02em" : "0.1em",
             }}
           >
-            {name.split("").map((char, i) => {
-              const totalChars = name.length;
-              const charFraction = i / totalChars;
-
-              if (hasHover) {
+            {hasHover ? (
+              name.split("").map((char, i) => {
+                const charFraction = i / name.length;
                 const approxX = charFraction * 100;
                 const mouseFraction = (mousePos.x / (nameRef.current?.offsetWidth || 1)) * 100;
                 const dist = Math.abs(approxX - mouseFraction);
@@ -113,21 +111,11 @@ const HeroSection = () => {
                     {char === " " ? "\u00A0" : char}
                   </span>
                 );
-              }
-
-              // Touch devices: subtle idle wave
-              return (
-                <span
-                  key={i}
-                  className="inline-block"
-                  style={{
-                    animation: loaded ? `hero-letter-wave 3s ease-in-out ${i * 0.12}s infinite` : "none",
-                  }}
-                >
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              );
-            })}
+              })
+            ) : (
+              // Touch devices: single element with CSS gradient shimmer (no per-letter spans)
+              <span className={loaded ? "hero-shimmer" : ""}>{name}</span>
+            )}
           </h1>
         </div>
 

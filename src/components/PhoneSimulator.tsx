@@ -209,11 +209,15 @@ const ISUScreen = ({ onBack, dark }: { onBack: () => void; dark: boolean }) => {
           )}
           <iframe
             src="https://app.isu.gg"
-            className="border-0 origin-top-left"
+            loading="lazy"
+            className="border-0 origin-top"
             style={{
               width: "390px",
               height: "844px",
-              transform: "scale(0.49)",
+              transform: "scale(0.40)",
+              position: "absolute",
+              left: "50%",
+              marginLeft: "-195px",
               opacity: iframeLoaded ? 1 : 0,
             }}
             onLoad={handleLoad}

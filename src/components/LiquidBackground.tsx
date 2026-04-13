@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const COLS = 32;
 const ROWS = 18;
@@ -34,8 +34,13 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
   const sticksRef = useRef<Stick[]>([]);
   const animRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
+  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
+    const touch = !window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    setIsTouch(touch);
+    if (touch) return; // Skip entire canvas setup on touch devices
+
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
@@ -89,23 +94,8 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
       mouseRef.current.y = -1000;
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      if (!touch) return;
-      const rect = container.getBoundingClientRect();
-      mouseRef.current.x = touch.clientX - rect.left;
-      mouseRef.current.y = touch.clientY - rect.top;
-    };
-
-    const handleTouchEnd = () => {
-      mouseRef.current.x = -1000;
-      mouseRef.current.y = -1000;
-    };
-
     window.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseleave", handleMouseLeave);
-    window.addEventListener("touchmove", handleTouchMove, { passive: true });
-    window.addEventListener("touchend", handleTouchEnd);
     window.addEventListener("resize", resize);
 
     const MOUSE_RADIUS_SQ = MOUSE_RADIUS * MOUSE_RADIUS;
@@ -201,11 +191,11 @@ const LiquidBackground = ({ className = "" }: { className?: string }) => {
       cancelAnimationFrame(animRef.current);
       window.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
       window.removeEventListener("resize", resize);
     };
   }, []);
+
+  if (isTouch) return null;
 
   return (
     <div ref={containerRef} className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
