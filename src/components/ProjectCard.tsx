@@ -18,7 +18,7 @@ const ProjectCard = ({ title, description, techStack, link, visible = true, inde
   return (
     <div
       ref={ref}
-      className="group relative rounded-xl border border-white/[0.06] bg-card p-6 transition-all duration-300 ease-out hover:border-white/[0.12] hover:-translate-y-1"
+      className="group relative rounded-xl border border-white/[0.06] bg-card p-6 transition-all duration-300 ease-out hover:border-white/[0.12] hover:-translate-y-1 active:border-white/[0.12] active:scale-[0.98]"
       style={{
         transform: visible ? transform : "perspective(600px) translateY(40px) scale(0.95)",
         opacity: visible ? 1 : 0,

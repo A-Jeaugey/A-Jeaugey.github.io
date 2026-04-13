@@ -161,6 +161,12 @@
   100% { transform: translateY(100%); }
 }
 
+/* Hero name idle wave (touch devices) */
+@keyframes hero-letter-wave {
+  0%, 100% { transform: translateY(0); color: inherit; }
+  50% { transform: translateY(-4px); color: hsl(210 50% 78%); }
+}
+
 /* Marquee */
 @keyframes marquee-scroll {
   0% { transform: translateX(0); }
@@ -241,8 +247,17 @@
   transition: opacity 0.5s ease;
 }
 
-.featured-card-glow:hover::before {
-  opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+  .featured-card-glow:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Touch devices: show glow on active tap */
+@media (hover: none) {
+  .featured-card-glow:active::before {
+    opacity: 0.7;
+  }
 }
 
 /* Phone screen gradient */

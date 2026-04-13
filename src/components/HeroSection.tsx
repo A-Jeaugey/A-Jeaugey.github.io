@@ -4,6 +4,7 @@ import LiquidBackground from "@/components/LiquidBackground";
 import MagneticButton from "@/components/MagneticButton";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useHasHover } from "@/hooks/use-mobile";
 
 const HeroSection = () => {
   const [loaded, setLoaded] = useState(false);
@@ -12,6 +13,7 @@ const HeroSection = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [bgOpacity, setBgOpacity] = useState(1);
   const { t } = useLanguage();
+  const hasHover = useHasHover();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 100);
@@ -21,7 +23,6 @@ const HeroSection = () => {
   const handleScroll = useCallback(() => {
     const scrollY = window.scrollY;
     const vh = window.innerHeight;
-    // Fade from 1 to 0.15 over the first viewport height
     const opacity = Math.max(0.15, 1 - (scrollY / vh) * 0.85);
     setBgOpacity(opacity);
   }, []);
@@ -34,6 +35,7 @@ const HeroSection = () => {
   const name = "Arthur Jeaugey";
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (!hasHover) return;
     const el = nameRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -49,12 +51,12 @@ const HeroSection = () => {
         <LiquidBackground />
       </div>
 
-      <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
+      <div className="relative z-10 max-w-2xl lg:max-w-3xl mx-auto px-6 text-center">
         {/* Focal halo behind title block */}
         <div
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
           style={{
-            width: "700px",
+            width: "min(700px, 100vw)",
             height: "400px",
             background: "radial-gradient(ellipse at center, rgba(59, 130, 246, 0.08) 0%, transparent 70%)",
             filter: "blur(60px)",
@@ -76,10 +78,10 @@ const HeroSection = () => {
           />
           <h1
             ref={nameRef}
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            className="relative text-5xl sm:text-6xl md:text-8xl font-bold tracking-tight text-foreground transition-all duration-[1.5s] ease-out cursor-default select-none"
+            onMouseMove={hasHover ? handleMouseMove : undefined}
+            onMouseEnter={hasHover ? () => setIsHovering(true) : undefined}
+            onMouseLeave={hasHover ? () => setIsHovering(false) : undefined}
+            className="relative text-[2.6rem] sm:text-6xl lg:text-8xl font-bold tracking-tight text-foreground transition-all duration-[1.5s] ease-out cursor-default select-none"
             style={{
               opacity: loaded ? 1 : 0,
               transform: loaded ? "translateY(0)" : "translateY(30px)",
@@ -89,21 +91,37 @@ const HeroSection = () => {
             {name.split("").map((char, i) => {
               const totalChars = name.length;
               const charFraction = i / totalChars;
-              const approxX = charFraction * 100;
-              const mouseFraction = (mousePos.x / (nameRef.current?.offsetWidth || 1)) * 100;
-              const dist = Math.abs(approxX - mouseFraction);
-              const influence = isHovering ? Math.max(0, 1 - dist / 25) : 0;
 
+              if (hasHover) {
+                const approxX = charFraction * 100;
+                const mouseFraction = (mousePos.x / (nameRef.current?.offsetWidth || 1)) * 100;
+                const dist = Math.abs(approxX - mouseFraction);
+                const influence = isHovering ? Math.max(0, 1 - dist / 25) : 0;
+
+                return (
+                  <span
+                    key={i}
+                    className="inline-block"
+                    style={{
+                      transform: `translateY(${-influence * 8}px) scale(${1 + influence * 0.08})`,
+                      color: influence > 0.3
+                        ? `hsl(210 ${30 + influence * 40}% ${70 + influence * 20}%)`
+                        : undefined,
+                      transition: "transform 0.2s ease-out, color 0.3s ease-out",
+                    }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </span>
+                );
+              }
+
+              // Touch devices: subtle idle wave
               return (
                 <span
                   key={i}
-                  className="inline-block transition-transform duration-300 ease-out"
+                  className="inline-block"
                   style={{
-                    transform: `translateY(${-influence * 8}px) scale(${1 + influence * 0.08})`,
-                    color: influence > 0.3
-                      ? `hsl(210 ${30 + influence * 40}% ${70 + influence * 20}%)`
-                      : undefined,
-                    transition: "transform 0.2s ease-out, color 0.3s ease-out",
+                    animation: loaded ? `hero-letter-wave 3s ease-in-out ${i * 0.12}s infinite` : "none",
                   }}
                 >
                   {char === " " ? "\u00A0" : char}

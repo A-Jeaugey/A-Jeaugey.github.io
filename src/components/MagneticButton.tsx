@@ -1,4 +1,5 @@
 import { useRef, useState, ReactNode } from "react";
+import { useHasHover } from "@/hooks/use-mobile";
 
 interface MagneticButtonProps {
   children: ReactNode;
@@ -10,8 +11,10 @@ interface MagneticButtonProps {
 const MagneticButton = ({ children, className = "", href, strength = 0.3 }: MagneticButtonProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
+  const hasHover = useHasHover();
 
   const handleMove = (e: React.MouseEvent) => {
+    if (!hasHover) return;
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -28,10 +31,10 @@ const MagneticButton = ({ children, className = "", href, strength = 0.3 }: Magn
   const content = (
     <div
       ref={ref}
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
+      onMouseMove={hasHover ? handleMove : undefined}
+      onMouseLeave={hasHover ? handleLeave : undefined}
       className={`inline-block transition-transform duration-300 ease-out ${className}`}
-      style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
+      style={{ transform: hasHover ? `translate(${pos.x}px, ${pos.y}px)` : undefined }}
     >
       {children}
     </div>

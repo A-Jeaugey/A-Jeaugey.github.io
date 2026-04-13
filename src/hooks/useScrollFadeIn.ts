@@ -82,12 +82,16 @@ export function useParallax(speed = 0.15) {
   return { ref, offset };
 }
 
-// Mouse tilt effect for cards
+// Mouse tilt effect for cards (disabled on touch devices)
 export function useMouseTilt(intensity = 8) {
   const ref = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState("perspective(600px) rotateX(0deg) rotateY(0deg)");
 
   useEffect(() => {
+    // Skip on touch devices — no mouse to track
+    const hasHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!hasHover) return;
+
     const el = ref.current;
     if (!el) return;
 

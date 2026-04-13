@@ -33,6 +33,10 @@ function usePhoneParallax() {
   }, []);
 
   useEffect(() => {
+    // Skip parallax on touch devices
+    const hasHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!hasHover) return;
+
     const el = containerRef.current;
     if (!el) return;
     el.addEventListener("mousemove", handleMove);
@@ -136,7 +140,7 @@ const FeaturedProjectCard = ({
                     href={playStoreLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.08] text-foreground text-sm font-medium border border-white/[0.08] hover:bg-white/[0.14] hover:border-white/[0.16] transition-all duration-300 hover:-translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/[0.08] text-foreground text-sm font-medium border border-white/[0.08] hover:bg-white/[0.14] hover:border-white/[0.16] transition-all duration-300 hover:-translate-y-0.5 active:bg-white/[0.14] active:scale-[0.97]"
                   >
                     <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
                       <path d="M3.609 1.814 13.793 12 3.61 22.186a2.37 2.37 0 0 1-.497-.544 2.71 2.71 0 0 1-.39-1.457V3.815c0-.56.145-1.063.39-1.457a2.37 2.37 0 0 1 .497-.544zm.88-.64L15.545 7.22l-2.904 2.906zm11.057 5.049L18.9 8.295a1.5 1.5 0 0 1 0 2.41l-3.558 2.21-3.035-3.036zM4.49 22.826l11.057-6.046-2.904-2.906z" />

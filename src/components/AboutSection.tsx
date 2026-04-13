@@ -42,7 +42,7 @@ const AboutSection = () => {
   const stats: string[] = t("about.stats");
 
   return (
-    <section id="about" className="py-28 sm:py-32">
+    <section id="about" className="py-16 sm:py-28 md:py-32">
       <div ref={parallaxRef} style={{ transform: `translateY(${offset}px)` }}>
         <div ref={ref} className="fade-section max-w-2xl mx-auto px-6">
           <div className="w-12 h-px bg-gradient-to-r from-transparent via-muted-foreground/30 to-transparent mb-10" />

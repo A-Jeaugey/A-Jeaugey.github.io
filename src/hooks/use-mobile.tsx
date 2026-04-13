@@ -17,3 +17,18 @@ export function useIsMobile() {
 
   return !!isMobile;
 }
+
+/** Returns true only on devices with a fine pointer (mouse/trackpad) */
+export function useHasHover() {
+  const [hasHover, setHasHover] = React.useState(true);
+
+  React.useEffect(() => {
+    const mql = window.matchMedia("(hover: hover) and (pointer: fine)");
+    setHasHover(mql.matches);
+    const onChange = () => setHasHover(mql.matches);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return hasHover;
+}

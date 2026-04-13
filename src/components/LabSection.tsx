@@ -400,7 +400,7 @@ const LabSection = () => {
     .replace("~/lab", "~/lab");
 
   return (
-    <section id="lab" className="py-24 sm:py-32 relative">
+    <section id="lab" className="py-16 sm:py-24 md:py-32 relative">
       {/* Grid background */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
@@ -480,7 +480,7 @@ const LabSection = () => {
               {/* Output area */}
               <div
                 ref={terminalRef}
-                className="p-4 h-[320px] overflow-y-auto font-mono text-[11px] leading-relaxed scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] flex-shrink-0"
+                className="p-4 h-[240px] sm:h-[320px] overflow-y-auto font-mono text-[11px] leading-relaxed scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] flex-shrink-0"
               >
                 {terminalLines.filter((line) => line != null).map((line, i) => (
                   <div
@@ -636,7 +636,7 @@ const LabSection = () => {
                     className={`group relative rounded-lg border overflow-hidden cursor-pointer transition-all duration-300 ${
                       isSelected
                         ? "border-foreground/20 bg-card"
-                        : "border-border bg-card/50 hover:border-foreground/10 hover:bg-card/80"
+                        : "border-border bg-card/50 hover:border-foreground/10 hover:bg-card/80 active:border-foreground/10 active:bg-card/80 active:scale-[0.98]"
                     }`}
                     style={{
                       opacity: visibleItems[i] ? 1 : 0,

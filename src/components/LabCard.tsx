@@ -13,6 +13,9 @@ const LabCard = ({ title, description, category, visible = true }: LabCardProps)
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
+    const hasHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!hasHover) return;
+
     const el = cardRef.current;
     if (!el) return;
 
@@ -33,7 +36,7 @@ const LabCard = ({ title, description, category, visible = true }: LabCardProps)
       ref={cardRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative rounded-lg border border-white/[0.06] bg-card/50 p-5 transition-all duration-300 ease-out hover:border-white/[0.12] hover:bg-card hover:-translate-y-1 overflow-hidden"
+      className="group relative rounded-lg border border-white/[0.06] bg-card/50 p-5 transition-all duration-300 ease-out hover:border-white/[0.12] hover:bg-card hover:-translate-y-1 active:border-white/[0.12] active:scale-[0.98] overflow-hidden"
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0) scale(1)" : "translateY(30px) scale(0.97)",
