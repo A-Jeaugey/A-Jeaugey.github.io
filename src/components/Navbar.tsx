@@ -11,6 +11,7 @@ const Navbar = () => {
   const { lang, setLang, t } = useLanguage();
 
   const links = [
+    { label: t("nav.ecosystem"), href: "#ecosystem" },
     { label: t("nav.projects"), href: "#projects" },
     { label: t("nav.lab"), href: "#lab" },
     { label: t("nav.about"), href: "#about" },

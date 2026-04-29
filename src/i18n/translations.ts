@@ -6,12 +6,46 @@ const translations = {
       projects: "Projects",
       lab: "Lab",
       about: "About",
+      ecosystem: "Sites",
       navigation: "Navigation",
     },
     hero: {
       subtitle: "Developer, tinkerer, pentester, PC builder, LLM wrangler... Currently building things that probably don't need to exist yet.",
       description: "Terminale maths/NSI · France",
       cta: "See what I've built",
+    },
+    ecosystem: {
+      label: "Ecosystem",
+      title: "More from arthurjeaugey.com",
+      description:
+        "A small constellation of sites I've built — a multiplayer game and three study hubs for high school finals.",
+      visit: "Visit",
+      sites: {
+        game: {
+          title: "Blades",
+          tag: "Multiplayer game",
+          description:
+            "A fast-paced multiplayer browser game. Jump in, pick a blade, and play.",
+        },
+        nsi: {
+          title: "NSI Revisions",
+          tag: "Computer Science",
+          description:
+            "Structured study notes covering the French NSI Terminale curriculum — algorithms, networks, databases.",
+        },
+        maths: {
+          title: "Maths Revisions",
+          tag: "Mathematics",
+          description:
+            "Lessons, formulas and worked examples for the Terminale maths program.",
+        },
+        philo: {
+          title: "Philo Revisions",
+          tag: "Philosophy",
+          description:
+            "Notions, authors and essay frameworks for the French Bac philosophy exam.",
+        },
+      },
     },
     projects: {
       title: "Projects",
@@ -184,12 +218,46 @@ const translations = {
       projects: "Projets",
       lab: "Labo",
       about: "À propos",
+      ecosystem: "Sites",
       navigation: "Navigation",
     },
     hero: {
       subtitle: "Développeur, bidouilleur, pentesteur, monteur de PC, dresseur de LLMs... Passe plus de temps à essayer de comprendre les choses qu'à les utiliser.",
       description: "Terminale maths/NSI · France",
       cta: "Voir mes projets",
+    },
+    ecosystem: {
+      label: "Écosystème",
+      title: "Mes autres sites",
+      description:
+        "Une petite constellation de sites que j'ai construits — un jeu multijoueur et trois espaces de révisions pour le bac.",
+      visit: "Visiter",
+      sites: {
+        game: {
+          title: "Blades",
+          tag: "Jeu multijoueur",
+          description:
+            "Un jeu multijoueur nerveux dans le navigateur. Tu choisis ta lame et tu joues, c'est tout.",
+        },
+        nsi: {
+          title: "Révisions NSI",
+          tag: "Informatique",
+          description:
+            "Fiches structurées du programme de NSI Terminale — algorithmes, réseaux, bases de données.",
+        },
+        maths: {
+          title: "Révisions Maths",
+          tag: "Mathématiques",
+          description:
+            "Cours, formules et exemples corrigés du programme de maths Terminale.",
+        },
+        philo: {
+          title: "Révisions Philo",
+          tag: "Philosophie",
+          description:
+            "Notions, auteurs et méthodes de dissertation pour l'épreuve de philo du Bac.",
+        },
+      },
     },
     projects: {
       title: "Projets",
