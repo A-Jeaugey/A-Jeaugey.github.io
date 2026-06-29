@@ -1,10 +1,9 @@
-import { ArrowUpRight, Gamepad2, Code2, Sigma, BookOpen, LucideIcon } from "lucide-react";
+import { ArrowUpRight, Gamepad2, Code2, Sigma, BookOpen, Mountain, LucideIcon } from "lucide-react";
 import { useStaggerReveal, useParallax, useMouseTilt } from "@/hooks/useScrollFadeIn";
 import { useLanguage } from "@/i18n/LanguageContext";
-import EcosystemFeaturedCard from "./EcosystemFeaturedCard";
 
 type SiteMeta = {
-  key: "game" | "nsi" | "maths" | "philo";
+  key: "game" | "nsi" | "maths" | "philo" | "sommet";
   icon: LucideIcon;
   url: string;
   domain: string;
@@ -12,13 +11,6 @@ type SiteMeta = {
 };
 
 const sites: SiteMeta[] = [
-  {
-    key: "game",
-    icon: Gamepad2,
-    url: "https://game.arthurjeaugey.com",
-    domain: "game.arthurjeaugey.com",
-    color: "265 75% 65%",
-  },
   {
     key: "nsi",
     icon: Code2,
@@ -39,6 +31,20 @@ const sites: SiteMeta[] = [
     url: "https://arthurjeaugey.com/revisions-philo",
     domain: "arthurjeaugey.com/revisions-philo",
     color: "30 85% 62%",
+  },
+  {
+    key: "game",
+    icon: Gamepad2,
+    url: "https://game.arthurjeaugey.com",
+    domain: "game.arthurjeaugey.com",
+    color: "265 75% 65%",
+  },
+  {
+    key: "sommet",
+    icon: Mountain,
+    url: "https://www.les-maths-au-sommet.org",
+    domain: "les-maths-au-sommet.org",
+    color: "192 80% 55%",
   },
 ];
 
@@ -179,7 +185,7 @@ const SiteCard = ({ site, visible, index }: SiteCardProps) => {
 };
 
 const EcosystemSection = () => {
-  const { containerRef, visibleItems } = useStaggerReveal(sites.length + 2, 110);
+  const { containerRef, visibleItems } = useStaggerReveal(sites.length + 1, 110);
   const { ref: parallaxRef, offset } = useParallax(0.05);
   const { t } = useLanguage();
 
@@ -248,30 +254,13 @@ const EcosystemSection = () => {
             </p>
           </div>
 
-          {/* Flagship: Les Maths au Sommet */}
-          <EcosystemFeaturedCard visible={visibleItems[1] ?? false} />
-
-          {/* Secondary group label */}
-          <div
-            className="flex items-center gap-3 mt-9 mb-4 transition-all duration-700"
-            style={{
-              opacity: visibleItems[1] ? 1 : 0,
-              transform: visibleItems[1] ? "translateY(0)" : "translateY(12px)",
-            }}
-          >
-            <span className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-[0.22em]">
-              {t("ecosystem.moreLabel")}
-            </span>
-            <span className="flex-1 h-px bg-white/[0.06]" />
-          </div>
-
           {/* Cards grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {sites.map((site, i) => (
               <SiteCard
                 key={site.key}
                 site={site}
-                visible={visibleItems[i + 2] ?? false}
+                visible={visibleItems[i + 1] ?? false}
                 index={i}
               />
             ))}
