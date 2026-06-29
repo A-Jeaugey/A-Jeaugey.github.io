@@ -18,23 +18,8 @@ const translations = {
       label: "Ecosystem",
       title: "More from arthurjeaugey.com",
       description:
-        "My flagship build for a teacher and her students, plus a small constellation of sites — a multiplayer game and three study hubs for high school finals.",
+        "A small constellation of sites I've built — three study hubs for high school finals, a multiplayer game, and a site for a teacher's class project.",
       visit: "Visit",
-      moreLabel: "Also built",
-      featured: {
-        label: "Flagship",
-        tag: "Website · No-code CMS",
-        title: "Les Maths au Sommet",
-        description:
-          "A site I imagined and designed end-to-end for a maths teacher and the project she runs with her students: pairing mathematics with the ascent of a 3,429 m alpine summit. I also built a no-code admin interface so she can edit every page herself — without touching a single line of code.",
-        cta: "Explore the site",
-        highlights: [
-          { label: "No-code admin", detail: "She edits it herself" },
-          { label: "A teacher & her class", detail: "Real pedagogy project" },
-          { label: "Designed end-to-end", detail: "Concept to code" },
-          { label: "Heading to 3,429 m", detail: "Maths × mountaineering" },
-        ],
-      },
       sites: {
         game: {
           title: "Blades",
@@ -59,6 +44,12 @@ const translations = {
           tag: "Philosophy",
           description:
             "Notions, authors and essay frameworks for the French Bac philosophy exam.",
+        },
+        sommet: {
+          title: "Les Maths au Sommet",
+          tag: "Custom site",
+          description:
+            "A site with a no-code admin I built for a teacher's maths-and-mountaineering class project.",
         },
       },
     },
@@ -245,23 +236,8 @@ const translations = {
       label: "Écosystème",
       title: "Mes autres sites",
       description:
-        "Mon projet phare conçu pour une prof et ses élèves, et une petite constellation de sites — un jeu multijoueur et trois espaces de révisions pour le bac.",
+        "Une petite constellation de sites que j'ai construits — trois espaces de révisions pour le bac, un jeu multijoueur, et un site pour le projet d'une prof et ses élèves.",
       visit: "Visiter",
-      moreLabel: "Aussi construits",
-      featured: {
-        label: "Projet phare",
-        tag: "Site web · CMS no-code",
-        title: "Les Maths au Sommet",
-        description:
-          "Un site que j'ai imaginé et conçu de A à Z pour une professeure de maths et le projet qu'elle mène avec ses élèves : allier les mathématiques à l'ascension d'un sommet alpin de 3 429 m. J'ai aussi développé une interface d'administration no-code pour qu'elle puisse modifier chaque page elle-même — sans toucher une seule ligne de code.",
-        cta: "Découvrir le site",
-        highlights: [
-          { label: "Admin no-code", detail: "Elle édite tout seule" },
-          { label: "Une prof & sa classe", detail: "Vrai projet pédago" },
-          { label: "Conçu de A à Z", detail: "De l'idée au code" },
-          { label: "Cap sur 3 429 m", detail: "Maths × alpinisme" },
-        ],
-      },
       sites: {
         game: {
           title: "Blades",
@@ -286,6 +262,12 @@ const translations = {
           tag: "Philosophie",
           description:
             "Notions, auteurs et méthodes de dissertation pour l'épreuve de philo du Bac.",
+        },
+        sommet: {
+          title: "Les Maths au Sommet",
+          tag: "Site sur-mesure",
+          description:
+            "Un site avec admin no-code que j'ai fait pour le projet maths et alpinisme d'une prof et ses élèves.",
         },
       },
     },
