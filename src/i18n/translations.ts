@@ -18,7 +18,7 @@ const translations = {
       label: "Ecosystem",
       title: "More from arthurjeaugey.com",
       description:
-        "A small constellation of sites I've built — three study hubs for high school finals, a multiplayer game, and a site for a teacher's class project.",
+        "A small constellation of sites I've built — three study hubs for high school finals, a multiplayer game, and a site for an educational project.",
       visit: "Visit",
       sites: {
         game: {
@@ -49,7 +49,7 @@ const translations = {
           title: "Les Maths au Sommet",
           tag: "Custom site",
           description:
-            "A site with a no-code admin I built for a teacher's maths-and-mountaineering class project.",
+            "Site and no-code admin interface, built for an educational project pairing mathematics with mountaineering.",
         },
       },
     },
@@ -236,7 +236,7 @@ const translations = {
       label: "Écosystème",
       title: "Mes autres sites",
       description:
-        "Une petite constellation de sites que j'ai construits — trois espaces de révisions pour le bac, un jeu multijoueur, et un site pour le projet d'une prof et ses élèves.",
+        "Une petite constellation de sites que j'ai construits — trois espaces de révisions pour le bac, un jeu multijoueur, et un site pour un projet pédagogique.",
       visit: "Visiter",
       sites: {
         game: {
@@ -267,7 +267,7 @@ const translations = {
           title: "Les Maths au Sommet",
           tag: "Site sur-mesure",
           description:
-            "Un site avec admin no-code que j'ai fait pour le projet maths et alpinisme d'une prof et ses élèves.",
+            "Site et interface d'administration no-code, conçus pour un projet pédagogique alliant mathématiques et alpinisme.",
         },
       },
     },
