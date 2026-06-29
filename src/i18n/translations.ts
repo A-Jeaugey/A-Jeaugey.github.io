@@ -49,7 +49,7 @@ const translations = {
           title: "Les Maths au Sommet",
           tag: "Custom site",
           description:
-            "Site and no-code admin interface, built for an educational project pairing mathematics with mountaineering.",
+            "Custom-built site and its admin CMS, for an educational project pairing mathematics with mountaineering.",
         },
       },
     },
@@ -267,7 +267,7 @@ const translations = {
           title: "Les Maths au Sommet",
           tag: "Site sur-mesure",
           description:
-            "Site et interface d'administration no-code, conçus pour un projet pédagogique alliant mathématiques et alpinisme.",
+            "Site développé sur-mesure et son CMS d'administration, pour un projet pédagogique alliant mathématiques et alpinisme.",
         },
       },
     },
