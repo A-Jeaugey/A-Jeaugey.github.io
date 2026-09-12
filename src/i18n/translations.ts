@@ -164,7 +164,7 @@ const translations = {
           "I use TryHackMe as a practical way to explore cybersecurity. So far I've mainly focused on foundational content: Linux, networking, enumeration and early offensive security concepts.",
         highlights: [
           "Reached the top 6% on TryHackMe",
-          "Completed 59 rooms",
+          "Completed 86 rooms",
           "Worked through most of the Pre Security path",
           "Used the platform to strengthen my Linux and network basics",
         ],
@@ -383,7 +383,7 @@ const translations = {
           "J'utilise TryHackMe comme approche pratique de la cybersécurité. Je me suis principalement concentré sur les fondamentaux : Linux, réseau, énumération et concepts de base de la sécurité offensive.",
         highlights: [
           "Atteint le top 6% sur TryHackMe",
-          "59 rooms complétées",
+          "86 rooms complétées",
           "Parcouru l'essentiel du parcours Pre Security",
           "Utilisé la plateforme pour renforcer mes bases Linux et réseau",
         ],
