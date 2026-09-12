@@ -11,7 +11,7 @@ const translations = {
     },
     hero: {
       subtitle: "Developer, tinkerer, pentester, PC builder, LLM wrangler... Currently building things that probably don't need to exist yet.",
-      description: "Terminale maths/NSI · France",
+      description: "EPITA — Info Sup (CS engineering prep) · France",
       cta: "See what I've built",
     },
     ecosystem: {
@@ -204,11 +204,11 @@ const translations = {
     about: {
       title: "About",
       paragraphs: [
-        "I'm Arthur, a computer science student based in France. I'm drawn to the intersection of software engineering and complex systems — the kind of problems where you have to understand what's happening several layers below the surface.",
+        "I'm Arthur, a computer science student at EPITA in France, currently in the first year of the integrated preparatory program (Info Sup). I'm drawn to the intersection of software engineering and complex systems — the kind of problems where you have to understand what's happening several layers below the surface.",
         "Most of my time goes into building things: mobile apps, ML pipelines, tools that solve real problems. Outside of that, I explore AI infrastructure, cybersecurity, and low-level systems. I like understanding how technology works, not just how to use it.",
         "When I'm not coding, I'm probably tuning 3D printer settings, reading about systems design, or setting up another experiment on my workstation.",
       ],
-      stats: ["Terminale Maths/NSI", "Top 9% TryHackMe", "4+ PC builds", "ISU on Play Store"],
+      stats: ["EPITA — Info Sup", "Top 9% TryHackMe", "4+ PC builds", "ISU on Play Store"],
     },
     contact: {
       tagline: "Want to chat? I'm open to opportunities and interesting projects.",
@@ -229,7 +229,7 @@ const translations = {
     },
     hero: {
       subtitle: "Développeur, bidouilleur, pentesteur, monteur de PC, dresseur de LLMs... Passe plus de temps à essayer de comprendre les choses qu'à les utiliser.",
-      description: "Terminale maths/NSI · France",
+      description: "EPITA — Info Sup (prépa intégrée) · France",
       cta: "Voir mes projets",
     },
     ecosystem: {
@@ -423,11 +423,11 @@ const translations = {
     about: {
       title: "À propos",
       paragraphs: [
-        "Je suis Arthur, étudiant en informatique en France. Je suis attiré par l'intersection entre l'ingénierie logicielle et les systèmes complexes — le type de problèmes où il faut comprendre ce qui se passe plusieurs couches en dessous de la surface.",
+        "Je suis Arthur, étudiant en informatique à l'EPITA, en première année de prépa intégrée (Info Sup). Je suis attiré par l'intersection entre l'ingénierie logicielle et les systèmes complexes — le type de problèmes où il faut comprendre ce qui se passe plusieurs couches en dessous de la surface.",
         "La plupart de mon temps est consacré à construire des choses : applications mobiles, pipelines ML, outils qui résolvent de vrais problèmes. En dehors de ça, j'explore l'infrastructure IA, la cybersécurité et les systèmes bas niveau. J'aime comprendre comment la technologie fonctionne, pas juste comment l'utiliser.",
         "Quand je ne code pas, je suis probablement en train de régler les paramètres de mon imprimante 3D, de lire sur le design de systèmes, ou de monter une nouvelle expérience sur mon poste de travail.",
       ],
-      stats: ["Terminale Maths/NSI", "Top 9% TryHackMe", "4+ PC builds", "ISU sur le Play Store"],
+      stats: ["EPITA — Info Sup", "Top 9% TryHackMe", "4+ PC builds", "ISU sur le Play Store"],
     },
     contact: {
       tagline: "Envie de discuter ? Je suis ouvert aux opportunités et aux projets intéressants.",
