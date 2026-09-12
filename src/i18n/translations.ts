@@ -163,7 +163,7 @@ const translations = {
         summary:
           "I use TryHackMe as a practical way to explore cybersecurity. So far I've mainly focused on foundational content: Linux, networking, enumeration and early offensive security concepts.",
         highlights: [
-          "Reached the top 9% on TryHackMe",
+          "Reached the top 6% on TryHackMe",
           "Completed 59 rooms",
           "Worked through most of the Pre Security path",
           "Used the platform to strengthen my Linux and network basics",
@@ -208,7 +208,7 @@ const translations = {
         "Most of my time goes into building things: mobile apps, ML pipelines, tools that solve real problems. Outside of that, I explore AI infrastructure, cybersecurity, and low-level systems. I like understanding how technology works, not just how to use it.",
         "When I'm not coding, I'm probably tuning 3D printer settings, reading about systems design, or setting up another experiment on my workstation.",
       ],
-      stats: ["EPITA — Info Sup", "Top 9% TryHackMe", "4+ PC builds", "ISU on Play Store"],
+      stats: ["EPITA — Info Sup", "Top 6% TryHackMe", "4+ PC builds", "ISU on Play Store"],
     },
     contact: {
       tagline: "Want to chat? I'm open to opportunities and interesting projects.",
@@ -382,7 +382,7 @@ const translations = {
         summary:
           "J'utilise TryHackMe comme approche pratique de la cybersécurité. Je me suis principalement concentré sur les fondamentaux : Linux, réseau, énumération et concepts de base de la sécurité offensive.",
         highlights: [
-          "Atteint le top 9% sur TryHackMe",
+          "Atteint le top 6% sur TryHackMe",
           "59 rooms complétées",
           "Parcouru l'essentiel du parcours Pre Security",
           "Utilisé la plateforme pour renforcer mes bases Linux et réseau",
@@ -427,7 +427,7 @@ const translations = {
         "La plupart de mon temps est consacré à construire des choses : applications mobiles, pipelines ML, outils qui résolvent de vrais problèmes. En dehors de ça, j'explore l'infrastructure IA, la cybersécurité et les systèmes bas niveau. J'aime comprendre comment la technologie fonctionne, pas juste comment l'utiliser.",
         "Quand je ne code pas, je suis probablement en train de régler les paramètres de mon imprimante 3D, de lire sur le design de systèmes, ou de monter une nouvelle expérience sur mon poste de travail.",
       ],
-      stats: ["EPITA — Info Sup", "Top 9% TryHackMe", "4+ PC builds", "ISU sur le Play Store"],
+      stats: ["EPITA — Info Sup", "Top 6% TryHackMe", "4+ PC builds", "ISU sur le Play Store"],
     },
     contact: {
       tagline: "Envie de discuter ? Je suis ouvert aux opportunités et aux projets intéressants.",
