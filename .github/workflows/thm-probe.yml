@@ -1,0 +1,38 @@
+name: THM probe (temporary diagnostic)
+
+on:
+  push:
+    branches: ["claude/confident-volta-e9061q"]
+    paths: [".github/workflows/thm-probe.yml"]
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe TryHackMe public endpoints from a GitHub runner
+        run: |
+          ID=3348157
+          for U in \
+            "https://tryhackme.com/api/v2/public-profile?userPublicId=$ID" \
+            "https://tryhackme.com/api/v2/badges/public-profile?userPublicId=$ID"
+          do
+            echo "=================================================="
+            echo "URL: $U"
+            code=$(curl -sS -m 30 -o body.txt -w '%{http_code}' "$U" 2>err.txt || echo "curl-error")
+            echo "http_status = $code"
+            echo "bytes       = $(wc -c < body.txt)"
+            echo "--- first 300 bytes of body ---"
+            head -c 300 body.txt || true
+            echo
+            if grep -qi "Security Checkpoint" body.txt; then
+              echo ">>> VERDICT: BLOCKED (bot-protection challenge)"
+            elif [ "$code" = "200" ]; then
+              echo ">>> VERDICT: OK"
+              echo "--- parsed keys (if JSON) ---"
+              python3 -c "import json;d=json.load(open('body.txt'));print(sorted(d.keys())[:40] if isinstance(d,dict) else type(d))" 2>/dev/null || echo "(not JSON)"
+            else
+              echo ">>> VERDICT: unexpected status $code"
+            fi
+            echo
+          done
