@@ -161,11 +161,11 @@ const translations = {
         description:
           "Working through hands-on labs to improve my understanding of Linux, networking, enumeration and offensive security basics.",
         summary:
-          "I use TryHackMe as a practical way to explore cybersecurity. So far I've mainly focused on foundational content: Linux, networking, enumeration and early offensive security concepts.",
+          "I use TryHackMe as a practical way to explore cybersecurity. I started with the foundations — Linux, networking, enumeration and early offensive security concepts — and I'm now wrapping up the Cyber Security 101 path, with the pentesting track next.",
         highlights: [
           "Reached the top 6% on TryHackMe",
           "Completed 86 rooms",
-          "Worked through most of the Pre Security path",
+          "Nearly finished the Cyber Security 101 path",
           "Used the platform to strengthen my Linux and network basics",
         ],
       },
@@ -380,11 +380,11 @@ const translations = {
         description:
           "Travail sur des labs pratiques pour améliorer ma compréhension de Linux, du réseau, de l'énumération et des bases de la sécurité offensive.",
         summary:
-          "J'utilise TryHackMe comme approche pratique de la cybersécurité. Je me suis principalement concentré sur les fondamentaux : Linux, réseau, énumération et concepts de base de la sécurité offensive.",
+          "J'utilise TryHackMe comme approche pratique de la cybersécurité. J'ai commencé par les fondamentaux — Linux, réseau, énumération et concepts de base de la sécurité offensive — et je termine actuellement le parcours Cyber Security 101, avant d'enchaîner sur le parcours pentesting.",
         highlights: [
           "Atteint le top 6% sur TryHackMe",
           "86 rooms complétées",
-          "Parcouru l'essentiel du parcours Pre Security",
+          "Parcours Cyber Security 101 presque terminé",
           "Utilisé la plateforme pour renforcer mes bases Linux et réseau",
         ],
       },
