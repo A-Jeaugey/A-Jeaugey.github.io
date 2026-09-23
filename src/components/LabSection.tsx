@@ -39,8 +39,8 @@ const experimentTools: Record<string, string[]> = {
 
 const experimentMetrics: Record<string, { label: string; value: string }[]> = {
   tryhackme: [
-    { label: "Rooms completed", value: "86" },
-    { label: "Global rank", value: "Top 6%" },
+    { label: "Rooms completed", value: "97" },
+    { label: "Global rank", value: "Top 5%" },
   ],
   "3d-printing": [{ label: "Files sold", value: "2" }],
 };

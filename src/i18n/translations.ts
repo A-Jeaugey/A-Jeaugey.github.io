@@ -161,12 +161,12 @@ const translations = {
         description:
           "Working through hands-on labs to improve my understanding of Linux, networking, enumeration and offensive security basics.",
         summary:
-          "I use TryHackMe as a practical way to explore cybersecurity. I started with the foundations — Linux, networking, enumeration and early offensive security concepts — and I'm now wrapping up the Cyber Security 101 path, with the pentesting track next.",
+          "I use TryHackMe as a practical way to explore cybersecurity. I worked through the foundations — Linux, networking, enumeration and early offensive security concepts — completed the Cyber Security 101 path, and I'm now working through the Jr Penetration Tester path.",
         highlights: [
-          "Reached the top 6% on TryHackMe",
-          "Completed 86 rooms",
-          "Nearly finished the Cyber Security 101 path",
-          "Used the platform to strengthen my Linux and network basics",
+          "Reached the top 5% on TryHackMe",
+          "Completed 97 rooms",
+          "Completed the Cyber Security 101 path",
+          "Now working through the Jr Penetration Tester path",
         ],
       },
       workstation: {
@@ -208,7 +208,7 @@ const translations = {
         "Most of my time goes into building things: mobile apps, ML pipelines, tools that solve real problems. Outside of that, I explore AI infrastructure, cybersecurity, and low-level systems. I like understanding how technology works, not just how to use it.",
         "When I'm not coding, I'm probably tuning 3D printer settings, reading about systems design, or setting up another experiment on my workstation.",
       ],
-      stats: ["EPITA — Info Sup", "Top 6% TryHackMe", "4+ PC builds", "ISU on Play Store"],
+      stats: ["EPITA — Info Sup", "Top 5% TryHackMe", "4+ PC builds", "ISU on Play Store"],
     },
     contact: {
       tagline: "Want to chat? I'm open to opportunities and interesting projects.",
@@ -380,12 +380,12 @@ const translations = {
         description:
           "Travail sur des labs pratiques pour améliorer ma compréhension de Linux, du réseau, de l'énumération et des bases de la sécurité offensive.",
         summary:
-          "J'utilise TryHackMe comme approche pratique de la cybersécurité. J'ai commencé par les fondamentaux — Linux, réseau, énumération et concepts de base de la sécurité offensive — et je termine actuellement le parcours Cyber Security 101, avant d'enchaîner sur le parcours pentesting.",
+          "J'utilise TryHackMe comme approche pratique de la cybersécurité. J'ai travaillé les fondamentaux — Linux, réseau, énumération et concepts de base de la sécurité offensive — terminé le parcours Cyber Security 101, et j'attaque maintenant le parcours Jr Penetration Tester.",
         highlights: [
-          "Atteint le top 6% sur TryHackMe",
-          "86 rooms complétées",
-          "Parcours Cyber Security 101 presque terminé",
-          "Utilisé la plateforme pour renforcer mes bases Linux et réseau",
+          "Atteint le top 5% sur TryHackMe",
+          "97 rooms complétées",
+          "Parcours Cyber Security 101 terminé",
+          "Parcours Jr Penetration Tester en cours",
         ],
       },
       workstation: {
@@ -427,7 +427,7 @@ const translations = {
         "La plupart de mon temps est consacré à construire des choses : applications mobiles, pipelines ML, outils qui résolvent de vrais problèmes. En dehors de ça, j'explore l'infrastructure IA, la cybersécurité et les systèmes bas niveau. J'aime comprendre comment la technologie fonctionne, pas juste comment l'utiliser.",
         "Quand je ne code pas, je suis probablement en train de régler les paramètres de mon imprimante 3D, de lire sur le design de systèmes, ou de monter une nouvelle expérience sur mon poste de travail.",
       ],
-      stats: ["EPITA — Info Sup", "Top 6% TryHackMe", "4+ PC builds", "ISU sur le Play Store"],
+      stats: ["EPITA — Info Sup", "Top 5% TryHackMe", "4+ PC builds", "ISU sur le Play Store"],
     },
     contact: {
       tagline: "Envie de discuter ? Je suis ouvert aux opportunités et aux projets intéressants.",
