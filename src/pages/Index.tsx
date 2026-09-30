@@ -5,6 +5,7 @@ import LabSection from "@/components/LabSection";
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
 import EcosystemSection from "@/components/EcosystemSection";
+import VanAdvisorSection from "@/components/VanAdvisorSection";
 import FloatingOrbs from "@/components/FloatingOrbs";
 import Marquee from "@/components/Marquee";
 import SectionDivider from "@/components/SectionDivider";
@@ -16,6 +17,8 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <Marquee />
+      <VanAdvisorSection />
+      <SectionDivider />
       <EcosystemSection />
       <SectionDivider />
       <ProjectsSection />
