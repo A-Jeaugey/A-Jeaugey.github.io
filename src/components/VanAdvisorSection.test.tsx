@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import VanAdvisorSection from "./VanAdvisorSection";
 
@@ -12,11 +12,6 @@ const renderSection = () =>
 
 describe("VanAdvisorSection", () => {
   beforeAll(() => {
-    globalThis.ResizeObserver ??= class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    };
     globalThis.IntersectionObserver ??= class {
       observe() {}
       unobserve() {}
@@ -28,23 +23,31 @@ describe("VanAdvisorSection", () => {
     localStorage.setItem("lang", "fr");
   });
 
-  // Testing Library collapses the no-break spaces in the rendered text into plain ones
-  it("shows each before/after pair with screen-reader labels", () => {
+  it("presents the product and links to it", () => {
     renderSection();
     expect(screen.getByRole("heading", { level: 2, name: "VanAdvisor" })).toBeInTheDocument();
-    expect(screen.getByText(/Premier affichage de l'accueil/)).toBeInTheDocument();
-    expect(screen.getByText("13 s").parentElement).toHaveTextContent("Avant : 13 s");
-    expect(screen.getByText("0,7 s").parentElement).toHaveTextContent("Après : 0,7 s");
-    expect(screen.getByText("Livré")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Visiter le site/ })).toHaveAttribute("href", "https://vanadvisor.fr");
   });
 
-  it("links to the live site", () => {
+  it("starts on the home screen", () => {
     renderSection();
-    expect(screen.getByRole("link", { name: "vanadvisor.fr" })).toHaveAttribute("href", "https://vanadvisor.fr");
+    expect(screen.getAllByRole("tab")).toHaveLength(4);
+    expect(screen.getByRole("tab", { name: /Accueil/ })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("img", { name: /Page d'accueil de VanAdvisor/ })).toBeInTheDocument();
   });
 
-  it("tells the four stories", () => {
+  it("switches screens from the tabs, with the address bar following", () => {
     renderSection();
-    expect(screen.getAllByRole("heading", { level: 4 })).toHaveLength(4);
+    fireEvent.click(screen.getByRole("tab", { name: /Catalogue/ }));
+    expect(screen.getByRole("tab", { name: /Catalogue/ })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("img", { name: /Catalogue de VanAdvisor/ })).toBeInTheDocument();
+    expect(screen.getByText("vanadvisor.fr/catalogue/")).toBeInTheDocument();
+  });
+
+  it("moves between tabs with the arrow keys", () => {
+    renderSection();
+    fireEvent.keyDown(screen.getByRole("tablist"), { key: "ArrowLeft" });
+    expect(screen.getByRole("tab", { name: /Catalogue/ })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tab", { name: /Catalogue/ })).toHaveFocus();
   });
 });
