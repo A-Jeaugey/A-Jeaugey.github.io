@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import MagneticButton from "@/components/MagneticButton";
+import LanguageToggle from "@/components/LanguageToggle";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
-  const { lang, setLang, t } = useLanguage();
+  const { t } = useLanguage();
 
   const links = [
     { label: t("nav.ecosystem"), href: "#ecosystem" },
@@ -26,17 +27,6 @@ const Navbar = () => {
       clearTimeout(timer);
     };
   }, []);
-
-  const LanguageToggle = () => (
-    <button
-      onClick={() => setLang(lang === "en" ? "fr" : "en")}
-      className="font-mono text-xs flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-all duration-300 px-2 py-1 rounded-md hover:bg-white/[0.04]"
-    >
-      <span className={`transition-all duration-300 ${lang === "fr" ? "text-foreground" : "text-muted-foreground/40"}`}>FR</span>
-      <span className="text-muted-foreground/20">/</span>
-      <span className={`transition-all duration-300 ${lang === "en" ? "text-foreground" : "text-muted-foreground/40"}`}>EN</span>
-    </button>
-  );
 
   return (
     <nav

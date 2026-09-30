@@ -218,6 +218,71 @@ const translations = {
       message: "Oops! Page not found",
       link: "Return to Home",
     },
+    legal: {
+      title: "Legal notice",
+      updated: "Last updated: September 30, 2026",
+      back: "Back to home",
+      publisher: {
+        title: "Publisher",
+        intro: "This website is a personal portfolio, published on a non-professional basis by:",
+        name: "Name",
+        contact: "Contact",
+        director: "Publication director",
+        note: "In accordance with French law no. 2004-575 of 21 June 2004 on confidence in the digital economy (LCEN), the publisher, acting on a non-professional basis, does not disclose a personal postal address. Identification details have been provided to the hosting provider.",
+      },
+      host: {
+        title: "Hosting",
+        intro: "This website is hosted on GitHub Pages, a service provided by:",
+        company: "Company",
+        address: "Address",
+        phone: "Phone",
+        website: "Website",
+        country: "United States",
+      },
+      sections: [
+        {
+          title: "Intellectual property",
+          paragraphs: [
+            "Unless otherwise stated, the texts, visuals and graphic elements of this website are the property of Arthur Jeaugey. Any reproduction, representation or reuse, in whole or in part, without prior written permission is prohibited.",
+            "Third-party names, trademarks and logos mentioned on this website remain the property of their respective owners.",
+          ],
+        },
+        {
+          title: "Personal data",
+          paragraphs: [
+            "This website has no forms, no user accounts and no analytics: the publisher does not collect any personal data during your visit.",
+            "As the hosting provider, GitHub logs visitors' IP addresses for security purposes. This processing is carried out by GitHub under its own privacy statement.",
+            "If you contact the publisher by email, your address and the content of your message are used solely to reply to you and are not shared with any third party.",
+            "Under the General Data Protection Regulation (GDPR) and the French Data Protection Act, you have the right to access, rectify and erase data concerning you, which you can exercise by writing to the contact address above. You may also lodge a complaint with the CNIL, the French data protection authority.",
+          ],
+          links: [
+            {
+              label: "GitHub Privacy Statement",
+              url: "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+            },
+            { label: "CNIL", url: "https://www.cnil.fr" },
+          ],
+        },
+        {
+          title: "Cookies and local storage",
+          paragraphs: [
+            "This website does not set any cookies. Only your language preference (FR/EN) is saved in your browser's local storage so that it is remembered between visits. This information stays on your device and is not sent to anyone; you can delete it at any time from your browser settings.",
+          ],
+        },
+        {
+          title: "Third-party content",
+          paragraphs: [
+            "Some resources are loaded from third-party services, which receive your IP address when doing so: fonts (Google Fonts) and, when you open them, the TryHackMe badge and the preview of the ISU app (app.isu.gg), embedded in frames. These services are subject to their own privacy policies.",
+          ],
+        },
+        {
+          title: "External links",
+          paragraphs: [
+            "This website contains links to third-party websites. The publisher has no control over their content and cannot be held responsible for it.",
+          ],
+        },
+      ],
+    },
   },
   fr: {
     nav: {
@@ -436,6 +501,71 @@ const translations = {
       title: "404",
       message: "Oups ! Page introuvable",
       link: "Retour à l'accueil",
+    },
+    legal: {
+      title: "Mentions légales",
+      updated: "Dernière mise à jour : 30 septembre 2026",
+      back: "Retour à l'accueil",
+      publisher: {
+        title: "Éditeur du site",
+        intro: "Ce site est un portfolio personnel, édité à titre non professionnel par :",
+        name: "Nom",
+        contact: "Contact",
+        director: "Directeur de la publication",
+        note: "Conformément à la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN), l'éditeur, agissant à titre non professionnel, ne rend pas publique son adresse personnelle. Ses éléments d'identification ont été communiqués à l'hébergeur.",
+      },
+      host: {
+        title: "Hébergement",
+        intro: "Le site est hébergé sur GitHub Pages, un service fourni par :",
+        company: "Raison sociale",
+        address: "Adresse",
+        phone: "Téléphone",
+        website: "Site web",
+        country: "États-Unis",
+      },
+      sections: [
+        {
+          title: "Propriété intellectuelle",
+          paragraphs: [
+            "Sauf mention contraire, les textes, visuels et éléments graphiques de ce site sont la propriété d'Arthur Jeaugey. Toute reproduction, représentation ou réutilisation, totale ou partielle, sans autorisation écrite préalable est interdite.",
+            "Les noms, marques et logos de tiers mentionnés sur ce site restent la propriété de leurs détenteurs respectifs.",
+          ],
+        },
+        {
+          title: "Données personnelles",
+          paragraphs: [
+            "Ce site ne comporte ni formulaire, ni espace membre, ni outil de mesure d'audience : l'éditeur ne collecte aucune donnée personnelle lors de votre visite.",
+            "En tant qu'hébergeur, GitHub enregistre l'adresse IP des visiteurs à des fins de sécurité. Ce traitement est effectué par GitHub, conformément à sa propre déclaration de confidentialité.",
+            "Si vous contactez l'éditeur par e-mail, votre adresse et le contenu de votre message sont utilisés uniquement pour vous répondre et ne sont transmis à aucun tiers.",
+            "Conformément au Règlement général sur la protection des données (RGPD) et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification et d'effacement des données vous concernant, que vous pouvez exercer en écrivant à l'adresse de contact ci-dessus. Vous pouvez également adresser une réclamation à la CNIL.",
+          ],
+          links: [
+            {
+              label: "Déclaration de confidentialité de GitHub",
+              url: "https://docs.github.com/fr/site-policy/privacy-policies/github-general-privacy-statement",
+            },
+            { label: "CNIL", url: "https://www.cnil.fr" },
+          ],
+        },
+        {
+          title: "Cookies et stockage local",
+          paragraphs: [
+            "Ce site ne dépose aucun cookie. Seule votre préférence de langue (FR/EN) est enregistrée dans le stockage local de votre navigateur afin d'être conservée d'une visite à l'autre. Cette information reste sur votre appareil et n'est transmise à personne ; vous pouvez la supprimer à tout moment depuis les paramètres de votre navigateur.",
+          ],
+        },
+        {
+          title: "Contenus tiers",
+          paragraphs: [
+            "Certaines ressources sont chargées depuis des services tiers, qui reçoivent à cette occasion votre adresse IP : les polices de caractères (Google Fonts) et, lorsque vous les affichez, le badge TryHackMe et l'aperçu de l'application ISU (app.isu.gg), intégrés dans des cadres. Ces services sont soumis à leurs propres politiques de confidentialité.",
+          ],
+        },
+        {
+          title: "Liens externes",
+          paragraphs: [
+            "Ce site contient des liens vers des sites tiers. L'éditeur n'exerce aucun contrôle sur leur contenu et ne saurait être tenu responsable de celui-ci.",
+          ],
+        },
+      ],
     },
   },
 } as const;

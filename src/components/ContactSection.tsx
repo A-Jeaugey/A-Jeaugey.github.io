@@ -1,4 +1,5 @@
 import { Github, Mail, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useStaggerReveal } from "@/hooks/useScrollFadeIn";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -56,7 +57,10 @@ const ContactSection = () => {
               opacity: visibleItems[contacts.length + 1] ? 1 : 0,
             }}
           >
-            © {new Date().getFullYear()} Arthur Jeaugey
+            © {new Date().getFullYear()} Arthur Jeaugey ·{" "}
+            <Link to="/mentions-legales" className="hover:text-muted-foreground transition-colors">
+              {t("legal.title")}
+            </Link>
           </p>
         </div>
       </div>
