@@ -7,6 +7,7 @@ const translations = {
       lab: "Lab",
       about: "About",
       ecosystem: "Sites",
+      vanadvisor: "VanAdvisor",
       navigation: "Navigation",
     },
     hero: {
@@ -218,6 +219,93 @@ const translations = {
       message: "Oops! Page not found",
       link: "Return to Home",
     },
+    vanadvisor: {
+      label: "Case study",
+      title: "VanAdvisor",
+      lede: "VanAdvisor helps future motorhome buyers find the right model, for free: a 14-question quiz compares the 1,800 models in the catalogue and recommends 12. I led the full rebuild of the site for a client, from audit to production.",
+      meta: ["Client project, end to end", "Audit in late August 2026", "Rebuilt 15–27 September 2026"],
+      road: {
+        title: "The route",
+        description: "Late August to 27 September 2026. At each sign, what the site left behind and what it found on arrival.",
+        from: "late Aug.",
+        to: "27 Sept.",
+        before: "Before:",
+        after: "After:",
+        milestones: [
+          {
+            label: "Homepage first display",
+            before: "13\u00a0s",
+            after: "0.7\u00a0s",
+            detail: "On a phone over slow 4G. The vehicle database now loads only when the quiz starts, and off-screen animations pause.",
+          },
+          {
+            label: "Vehicle listings",
+            before: "1,260",
+            after: "1,800",
+            detail: "250 made-up models removed, 78 duplicates merged, every listing sourced.",
+          },
+          {
+            label: "Photos",
+            before: "0",
+            after: "1,800",
+            detail: "One per listing, 1,454 of them official manufacturer photos, each checked by hand.",
+          },
+          {
+            label: "Known defects",
+            before: "72",
+            after: "0",
+            detail: "3 of them broke entire user flows. None left open after a full 92-point audit.",
+          },
+          {
+            label: "Automated tests",
+            before: "0",
+            after: "1,171",
+            detail: "Assertions across 21 suites, including full journeys in a real browser, run on every change.",
+          },
+          {
+            label: "Hosting",
+            before: "Netlify",
+            after: "Cloudflare",
+            detail: "From blocked deployments to hosting and a database at €0 a month.",
+          },
+        ],
+        finale: {
+          value: "Delivered",
+          caption: "27.09.2026",
+          detail: "Handed over to the client with a 13-page delivery report and a jargon-free handover guide.",
+        },
+      },
+      stories: {
+        title: "Under the hood",
+        items: [
+          {
+            title: "Law before design",
+            body: "A French law on telephone canvassing came into force on 11 August 2026, and the site's contact form did not comply. It was redesigned around an optional consent box, never pre-ticked: the phone number is only requested once consent is given, and the proof is kept for three years.",
+          },
+          {
+            title: "Data you can trust",
+            body: "250 models that didn't exist, 78 duplicates, no sources. Every listing now cites its own, photos come from the manufacturers, and the 18-page table of Camping-Car Magazine's 2027 Panorama was transcribed and checked line by line: 1,394 rows, five misprints corrected with evidence.",
+          },
+          {
+            title: "A production incident, handled",
+            body: "After a deployment, a Cloudflare routing rule cut every API route for 13 minutes. Root cause found, fix shipped, a guard test added so it cannot happen again, and a written post-mortem.",
+          },
+          {
+            title: "Back office: no entry",
+            body: "Invisible to everyone else (it answers with a 404), every call re-checked server-side, a nonce-based security policy, and no visitor text can execute. Inside, a map of buyers and dealers by département in Lambert-93 projection: 96 départements in 44\u00a0KB, borders still seamless after simplification.",
+          },
+        ],
+      },
+      role: {
+        title: "My role",
+        body: "End-to-end engagement for a client: audit of the existing site and rebuild plan; product, design, data and legal decisions; full-stack development (front end, serverless API, database, emails, AI assistant, back office); tests, continuous integration, deployment and a delivery report.",
+      },
+      method: {
+        title: "Method",
+        body: "Development was carried out with AI coding agents (Claude Code). I scoped and split the work, made the calls, had every delivery verified (tests, on-screen review on phone and desktop, audits) and ran the production rollout.",
+      },
+      stackTitle: "Stack",
+    },
     legal: {
       title: "Legal notice",
       updated: "Last updated: September 30, 2026",
@@ -290,6 +378,7 @@ const translations = {
       lab: "Labo",
       about: "À propos",
       ecosystem: "Sites",
+      vanadvisor: "VanAdvisor",
       navigation: "Navigation",
     },
     hero: {
@@ -501,6 +590,93 @@ const translations = {
       title: "404",
       message: "Oups ! Page introuvable",
       link: "Retour à l'accueil",
+    },
+    vanadvisor: {
+      label: "Étude de cas",
+      title: "VanAdvisor",
+      lede: "VanAdvisor aide les futurs acheteurs de camping-car à trouver le bon modèle, gratuitement : un questionnaire de 14 questions compare les 1\u00a0800 modèles du catalogue et en recommande 12. J'ai mené la refonte complète du site pour un client, de l'audit à la mise en production.",
+      meta: ["Mission client, de bout en bout", "Audit fin août 2026", "Refonte du 15 au 27 septembre 2026"],
+      road: {
+        title: "Le trajet",
+        description: "De fin août au 27 septembre 2026. À chaque panneau, ce que le site laisse derrière lui et ce qu'il trouve en arrivant.",
+        from: "fin août",
+        to: "27 sept.",
+        before: "Avant :",
+        after: "Après :",
+        milestones: [
+          {
+            label: "Premier affichage de l'accueil",
+            before: "13\u00a0s",
+            after: "0,7\u00a0s",
+            detail: "Sur un téléphone en 4G lente. La base de véhicules n'est plus chargée qu'au démarrage du questionnaire, et les animations hors de l'écran se figent.",
+          },
+          {
+            label: "Fiches véhicules",
+            before: "1\u00a0260",
+            after: "1\u00a0800",
+            detail: "250 modèles inventés retirés, 78 doublons fusionnés, 100\u00a0% des fiches sourcées.",
+          },
+          {
+            label: "Photos",
+            before: "0",
+            after: "1\u00a0800",
+            detail: "Une par fiche, dont 1\u00a0454 officielles du constructeur, relues une à une.",
+          },
+          {
+            label: "Défauts connus",
+            before: "72",
+            after: "0",
+            detail: "Dont 3 qui cassaient des parcours entiers. Plus aucun d'ouvert après un audit complet de 92 points.",
+          },
+          {
+            label: "Tests automatiques",
+            before: "0",
+            after: "1\u00a0171",
+            detail: "Assertions réparties en 21 suites, dont des parcours complets dans un vrai navigateur, lancées à chaque modification.",
+          },
+          {
+            label: "Hébergement",
+            before: "Netlify",
+            after: "Cloudflare",
+            detail: "Des déploiements bloqués à un hébergement et une base de données à 0\u00a0€ par mois.",
+          },
+        ],
+        finale: {
+          value: "Livré",
+          caption: "27.09.2026",
+          detail: "Remis au client avec un rapport de livraison de 13 pages et un guide de prise en main sans jargon.",
+        },
+      },
+      stories: {
+        title: "Sous le capot",
+        items: [
+          {
+            title: "La loi avant le design",
+            body: "Une loi sur le démarchage téléphonique entrait en vigueur le 11 août 2026, et le formulaire de contact n'y était pas conforme. Il a été repensé autour d'un accord facultatif, jamais coché d'avance : le téléphone n'est demandé que si l'accord est donné, et la preuve est conservée trois ans.",
+          },
+          {
+            title: "Des données qu'on peut croire",
+            body: "250 modèles qui n'existaient pas, 78 doublons, aucune source. Chaque fiche cite désormais la sienne, les photos viennent des constructeurs, et les 18 pages de tableau du Panorama 2027 de Camping-Car Magazine ont été transcrites puis contrôlées ligne à ligne : 1\u00a0394 lignes, cinq coquilles corrigées preuves à l'appui.",
+          },
+          {
+            title: "Un incident de production, géré",
+            body: "Après un déploiement, une règle de routage Cloudflare a coupé toutes les routes d'API pendant 13 minutes. Cause trouvée, correctif en ligne, test garde-fou ajouté pour que ça ne se reproduise pas, compte rendu écrit.",
+          },
+          {
+            title: "Back-office : accès interdit",
+            body: "Invisible pour les autres (il répond par une page 404), chaque appel revérifié côté serveur, une politique de sécurité à nonce, et aucun texte de visiteur ne peut s'exécuter. Dedans, une carte des acheteurs et des concessionnaires par département en projection Lambert-93 : 96 départements en 44\u00a0Ko, frontières jointives après simplification.",
+          },
+        ],
+      },
+      role: {
+        title: "Mon rôle",
+        body: "Mission menée de bout en bout pour un client : audit du site existant et plan de refonte ; arbitrage des décisions produit, design, données et juridiques ; développement full-stack (front, API serverless, base de données, emails, assistant IA, back-office) ; tests, intégration continue, mise en production et rapport de livraison.",
+      },
+      method: {
+        title: "Méthode",
+        body: "Le développement a été mené avec des agents de code IA (Claude Code). Je cadrais, découpais le travail, tranchais les décisions, faisais vérifier chaque livraison (tests, relecture à l'écran sur téléphone et ordinateur, audits) et gérais la mise en production.",
+      },
+      stackTitle: "Stack",
     },
     legal: {
       title: "Mentions légales",

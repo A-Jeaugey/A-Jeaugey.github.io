@@ -12,6 +12,7 @@ const Navbar = () => {
   const { t } = useLanguage();
 
   const links = [
+    { label: t("nav.vanadvisor"), href: "#vanadvisor" },
     { label: t("nav.ecosystem"), href: "#ecosystem" },
     { label: t("nav.projects"), href: "#projects" },
     { label: t("nav.lab"), href: "#lab" },
